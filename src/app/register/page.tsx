@@ -11,11 +11,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuth } from "@/context/AuthContext";
+import { useState } from "react";
 
 export default function RegisterPage() {
-  const handleGoogleAuth = () => {
-    // Mock auth flow - redirect to app
-    window.location.href = "/app";
+  const { loginWithGoogle } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleGoogleAuth = async () => {
+    setIsLoading(true);
+    try {
+      await loginWithGoogle();
+    } catch (error) {
+      console.error("Registration failed:", error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -37,6 +47,7 @@ export default function RegisterPage() {
             variant="outline"
             className="w-full h-12 border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 relative font-medium"
             onClick={handleGoogleAuth}
+            disabled={isLoading}
           >
             <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
               <path
@@ -56,7 +67,7 @@ export default function RegisterPage() {
                 fill="#EA4335"
               />
             </svg>
-            Continue with Google
+            {isLoading ? "Redirecting..." : "Continue with Google"}
           </Button>
 
           <div className="relative">
@@ -65,15 +76,13 @@ export default function RegisterPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white px-2 text-slate-500">
-                Or continue with
+                Secure authentication
               </span>
             </div>
           </div>
 
-          <div className="grid gap-2">
-            <div className="text-center text-sm text-slate-500">
-              Mock Authentication: Clicking button redirects to App
-            </div>
+          <div className="text-center text-sm text-slate-500">
+            Sign up securely with your Google account
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4 border-t border-slate-100 pt-6">
