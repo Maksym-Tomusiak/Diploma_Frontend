@@ -62,7 +62,7 @@ export default function Landing() {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Link href="#">
+            <Link href="/login">
               <Button
                 variant="outline"
                 className="border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
@@ -70,7 +70,7 @@ export default function Landing() {
                 Log in
               </Button>
             </Link>
-            <Link href="#">
+            <Link href="/register">
               <Button className="bg-blue-600 text-white hover:bg-blue-700 shadow-sm">
                 Get Started
               </Button>
