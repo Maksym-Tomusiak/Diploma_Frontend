@@ -23,5 +23,6 @@ export interface User {
   id: number;
   email: string;
   role: UserRole;
+  is_banned?: boolean;
   created_at: string;
 }

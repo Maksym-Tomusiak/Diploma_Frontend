@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { FileText } from "lucide-react";
+import { authService } from "@/services/AuthService";
+import { UserRole } from "@/types/auth";
 
 export default function AuthCallbackPage() {
   const searchParams = useSearchParams();
@@ -10,24 +12,40 @@ export default function AuthCallbackPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = searchParams.get("token");
-    const errorParam = searchParams.get("error");
+    const handleCallback = async () => {
+      const token = searchParams.get("token");
+      const errorParam = searchParams.get("error");
 
-    if (errorParam) {
-      setError(decodeURIComponent(errorParam));
-      return;
-    }
+      if (errorParam) {
+        setError(decodeURIComponent(errorParam));
+        return;
+      }
 
-    if (!token) {
-      setError("No authorization token received");
-      return;
-    }
+      if (!token) {
+        setError("No authorization token received");
+        return;
+      }
 
-    // Store the token
-    localStorage.setItem("token", token);
+      // Store the token
+      localStorage.setItem("token", token);
 
-    // Redirect to app
-    router.push("/app");
+      try {
+        // Fetch user data to determine role
+        const user = await authService.getCurrentUser();
+
+        // Redirect based on role
+        if (user.role === UserRole.ADMIN) {
+          router.push("/admin");
+        } else {
+          router.push("/app");
+        }
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+        setError("Failed to complete authentication");
+      }
+    };
+
+    handleCallback();
   }, [searchParams, router]);
 
   if (error) {

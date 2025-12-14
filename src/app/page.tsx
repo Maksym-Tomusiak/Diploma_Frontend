@@ -10,8 +10,11 @@ import {
   Menu,
   X,
   ArrowRight,
+  LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
+import { UserRole } from "@/types/auth";
 import {
   Accordion,
   AccordionItem,
@@ -22,6 +25,12 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function Landing() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    window.location.reload();
+  };
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
@@ -62,19 +71,44 @@ export default function Landing() {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Link href="/login">
-              <Button
-                variant="outline"
-                className="border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
-              >
-                Log in
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button className="bg-blue-600 text-white hover:bg-blue-700 shadow-sm">
-                Get Started
-              </Button>
-            </Link>
+            {!isLoading &&
+              (isAuthenticated ? (
+                <>
+                  <Link
+                    href={user?.role === UserRole.ADMIN ? "/admin" : "/app"}
+                  >
+                    <Button className="bg-blue-600 text-white hover:bg-blue-700 shadow-sm">
+                      {user?.role === UserRole.ADMIN
+                        ? "Go to Admin"
+                        : "Go to App"}
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="outline"
+                    className="border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                    onClick={handleLogout}
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button
+                      variant="outline"
+                      className="border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                    >
+                      Log in
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button className="bg-blue-600 text-white hover:bg-blue-700 shadow-sm">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              ))}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -109,16 +143,44 @@ export default function Landing() {
               FAQ
             </a>
             <div className="pt-4 flex flex-col gap-2">
-              <Link href="#">
-                <Button variant="outline" className="w-full justify-center">
-                  Log in
-                </Button>
-              </Link>
-              <Link href="#">
-                <Button className="w-full justify-center bg-blue-600">
-                  Get Started
-                </Button>
-              </Link>
+              {!isLoading &&
+                (isAuthenticated ? (
+                  <>
+                    <Link
+                      href={user?.role === UserRole.ADMIN ? "/admin" : "/app"}
+                    >
+                      <Button className="w-full justify-center bg-blue-600">
+                        {user?.role === UserRole.ADMIN
+                          ? "Go to Admin"
+                          : "Go to App"}
+                      </Button>
+                    </Link>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-center"
+                      onClick={handleLogout}
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login">
+                      <Button
+                        variant="outline"
+                        className="w-full justify-center"
+                      >
+                        Log in
+                      </Button>
+                    </Link>
+                    <Link href="/register">
+                      <Button className="w-full justify-center bg-blue-600">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                ))}
             </div>
           </div>
         )}

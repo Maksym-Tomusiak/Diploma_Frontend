@@ -35,6 +35,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error("Failed to fetch user:", error);
+      // If user is banned, backend will return 403. Clear local token and set user to null.
+      // This prevents banned users from using the frontend.
+      // Try to detect HTTP response status if available.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const err: any = error;
+      if (err?.response?.status === 403) {
+        try {
+          if (typeof window !== "undefined") localStorage.removeItem("token");
+        } catch {}
+      }
       setUser(null);
     }
   }, []);
