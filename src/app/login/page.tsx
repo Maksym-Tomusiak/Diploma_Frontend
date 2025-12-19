@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FileText } from "lucide-react";
+import { FileText, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,18 +12,30 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const { loginWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error) {
+      setErrorMessage(decodeURIComponent(error));
+    }
+  }, [searchParams]);
 
   const handleGoogleAuth = async () => {
     setIsLoading(true);
+    setErrorMessage(null); // Clear any previous errors
     try {
       await loginWithGoogle();
     } catch (error) {
       console.error("Login failed:", error);
+      setErrorMessage("Failed to initiate login. Please try again.");
       setIsLoading(false);
     }
   };
@@ -43,6 +55,17 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {errorMessage && (
+            <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-md">
+              <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium text-red-900">
+                  Authentication Error
+                </p>
+                <p className="text-sm text-red-700 mt-1">{errorMessage}</p>
+              </div>
+            </div>
+          )}
           <Button
             variant="outline"
             className="w-full h-12 border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 relative font-medium"

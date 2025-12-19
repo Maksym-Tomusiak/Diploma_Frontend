@@ -25,4 +25,5 @@ export interface User {
   role: UserRole;
   is_banned?: boolean;
   created_at: string;
+  google_access_token?: string;
 }
