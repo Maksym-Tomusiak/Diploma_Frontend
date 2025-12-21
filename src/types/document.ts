@@ -13,6 +13,17 @@ export interface Document {
   created_at: string;
 }
 
+export interface Font {
+  id: number;
+  family: string;
+  category: string | null;
+  variants: string | null;
+  subsets: string | null;
+  version: string | null;
+  last_modified: string | null;
+  created_at: string;
+}
+
 export interface DocumentCreate {
   google_doc_id: string;
   template_id: number;
@@ -22,16 +33,46 @@ export interface Template {
   id: number;
   name: string;
   description: string;
+  font_id: number | null;
+  font_family: string | null; // Returned from API for convenience
   params: TemplateParams;
   is_active: boolean;
   created_at: string;
 }
 
+export interface PageMargins {
+  top: number; // Відступ зверху (мм)
+  bottom: number; // Відступ знизу (мм)
+  left: number; // Відступ зліва (мм)
+  right: number; // Відступ справа (мм)
+}
+
+export interface PageNumbering {
+  enabled: boolean; // Чи включена нумерація сторінок
+  start_page: number; // З якої сторінки починати нумерацію
+}
+
 export interface TemplateParams {
-  page?: Record<string, any>;
-  typography?: Record<string, any>;
-  headings?: Record<string, any>;
-  numbering?: Record<string, any>;
+  font_size: number; // Розмір шрифту
+  line_spacing: number; // Міжрядковий інтервал
+  margins: PageMargins; // Відступи для сторінок
+  page_numbering: PageNumbering; // Налаштування нумерації сторінок
+  skip_first_page: boolean; // Чи пропускати першу сторінку для всіх перевірок
+}
+
+export interface TemplateCreate {
+  name: string;
+  description: string;
+  font_id?: number | null;
+  params: TemplateParams;
+}
+
+export interface TemplateUpdate {
+  name?: string;
+  description?: string;
+  font_id?: number | null;
+  params?: TemplateParams;
+  is_active?: boolean;
 }
 
 export interface Issue {

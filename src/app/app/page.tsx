@@ -36,6 +36,8 @@ import { documentService } from "@/services/DocumentService";
 import { templateService } from "@/services/TemplateService";
 import { checkResultService } from "@/services/CheckResultService";
 import { useGooglePicker, type GoogleDocument } from "@/hooks/useGooglePicker";
+import { useDocumentWorkflow } from "@/hooks/useDocumentWorkflow";
+import { getUserInitials } from "@/lib/formatters";
 import type {
   Document,
   Template,
@@ -43,18 +45,26 @@ import type {
   Issue,
   DocumentStatus,
 } from "@/types/document";
-
-type WorkflowStatus =
-  | "idle"
-  | "checking"
-  | "checked"
-  | "formatting"
-  | "complete";
+import type { WorkflowStatus, FormatSettings } from "@/types/workspace";
 
 export default function AppWorkspace() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading, logout } = useAuth();
   const { isLoaded: isPickerLoaded, openPicker } = useGooglePicker();
+
+  // Document workflow
+  const {
+    currentDocument,
+    setCurrentDocument,
+    status,
+    logs,
+    setLogs,
+    checkResult,
+    createDocument,
+    startCheck,
+    startFormat,
+    clearDocument,
+  } = useDocumentWorkflow();
 
   // State
   const [googleDocId, setGoogleDocId] = useState("");
@@ -62,20 +72,18 @@ export default function AppWorkspace() {
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
-  const [status, setStatus] = useState<WorkflowStatus>("idle");
-  const [logs, setLogs] = useState<string[]>([]);
-  const [checkResult, setCheckResult] = useState<CheckResult | null>(null);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [loadingDocuments, setLoadingDocuments] = useState(true);
 
   // Settings state
-  const [enableTypography, setEnableTypography] = useState(true);
-  const [enableMargins, setEnableMargins] = useState(true);
-  const [enableSpacing, setEnableSpacing] = useState(true);
-  const [fixCitations, setFixCitations] = useState(true);
-  const [autoFitTables, setAutoFitTables] = useState(true);
-  const [centerImages, setCenterImages] = useState(false);
+  const [settings, setSettings] = useState<FormatSettings>({
+    enableTypography: true,
+    enableMargins: true,
+    enableSpacing: true,
+    fixCitations: true,
+    autoFitTables: true,
+    centerImages: false,
+  });
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -157,118 +165,19 @@ export default function AppWorkspace() {
 
   const handleCreateDocument = async () => {
     if (!googleDocId || !selectedTemplate) {
-      setLogs((prev) => [
-        ...prev,
-        "> Error: Please select a document and template",
-      ]);
       return;
     }
 
-    try {
-      setLogs(["> Creating document entry..."]);
-      const doc = await documentService.createDocument({
-        google_doc_id: googleDocId,
-        template_id: selectedTemplate,
-      });
-      setCurrentDocument(doc);
+    const doc = await createDocument(googleDocId, selectedTemplate);
+    if (doc) {
       setDocuments((prev) => [doc, ...prev]);
-      setLogs((prev) => [
-        ...prev,
-        `> Document created: ${doc.title || doc.google_doc_id}`,
-      ]);
-    } catch (error: any) {
-      console.error("Failed to create document:", error);
-      setLogs((prev) => [
-        ...prev,
-        `> Error creating document: ${
-          error?.response?.data?.detail || error.message
-        }`,
-      ]);
     }
   };
 
-  const startCheck = async () => {
-    if (!currentDocument) {
-      setLogs(["> Error: No document selected"]);
-      return;
-    }
-
-    setStatus("checking");
-    setLogs(["> Initializing format checker..."]);
-
-    try {
-      // Trigger check
-      await documentService.checkDocument(currentDocument.id);
-
-      // Simulate progress steps
-      const steps = [
-        "Reading document structure...",
-        "Verifying page margins...",
-        "Checking font families...",
-        "Analyzing paragraph indentation...",
-        "Validating citation format...",
-        "Scanning for table consistency...",
-      ];
-
-      for (let i = 0; i < steps.length; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        setLogs((prev) => [...prev, `> ${steps[i]} OK`]);
-      }
-
-      // Get check results
-      const results = await checkResultService.getDocumentCheckResults(
-        currentDocument.id
-      );
-
-      if (results.length > 0) {
-        const latestResult = results[0];
-        setCheckResult(latestResult);
-        setLogs((prev) => [
-          ...prev,
-          `> Analysis complete. ${latestResult.issues_count} issue(s) found.`,
-        ]);
-      }
-
-      setStatus("checked");
-    } catch (error: any) {
-      console.error("Check failed:", error);
-      setLogs((prev) => [
-        ...prev,
-        `> Error: ${error?.response?.data?.detail || error.message}`,
-      ]);
-      setStatus("idle");
-    }
-  };
-
-  const startFormat = async () => {
-    if (!currentDocument) return;
-
-    setStatus("formatting");
-    setLogs((prev) => [...prev, "> Applying automated fixes..."]);
-
-    try {
-      await documentService.formatDocument(currentDocument.id);
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setLogs((prev) => [...prev, "> Corrections applied successfully."]);
-      setStatus("complete");
-    } catch (error: any) {
-      console.error("Format failed:", error);
-      setLogs((prev) => [
-        ...prev,
-        `> Error: ${error?.response?.data?.detail || error.message}`,
-      ]);
-      setStatus("checked");
-    }
-  };
-
-  const clearDocument = () => {
-    setCurrentDocument(null);
+  const handleClearDocument = () => {
+    clearDocument();
     setGoogleDocId("");
     setSelectedDocName("");
-    setStatus("idle");
-    setLogs([]);
-    setCheckResult(null);
   };
 
   if (isLoading) {
@@ -407,7 +316,7 @@ export default function AppWorkspace() {
                     variant="ghost"
                     size="icon"
                     className="h-6 w-6 text-blue-500 hover:text-blue-700"
-                    onClick={clearDocument}
+                    onClick={handleClearDocument}
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -461,8 +370,10 @@ export default function AppWorkspace() {
                   </Label>
                   <Switch
                     id="font-fix"
-                    checked={enableTypography}
-                    onCheckedChange={setEnableTypography}
+                    checked={settings.enableTypography}
+                    onCheckedChange={(checked) =>
+                      setSettings({ ...settings, enableTypography: checked })
+                    }
                   />
                 </div>
 
@@ -477,8 +388,10 @@ export default function AppWorkspace() {
                   </Label>
                   <Switch
                     id="margin-fix"
-                    checked={enableMargins}
-                    onCheckedChange={setEnableMargins}
+                    checked={settings.enableMargins}
+                    onCheckedChange={(checked) =>
+                      setSettings({ ...settings, enableMargins: checked })
+                    }
                   />
                 </div>
 
@@ -493,8 +406,10 @@ export default function AppWorkspace() {
                   </Label>
                   <Switch
                     id="spacing-fix"
-                    checked={enableSpacing}
-                    onCheckedChange={setEnableSpacing}
+                    checked={settings.enableSpacing}
+                    onCheckedChange={(checked) =>
+                      setSettings({ ...settings, enableSpacing: checked })
+                    }
                   />
                 </div>
               </div>
@@ -505,9 +420,12 @@ export default function AppWorkspace() {
                 <div className="flex items-center space-x-3">
                   <Checkbox
                     id="citations"
-                    checked={fixCitations}
+                    checked={settings.fixCitations}
                     onCheckedChange={(checked) =>
-                      setFixCitations(checked === true)
+                      setSettings({
+                        ...settings,
+                        fixCitations: checked === true,
+                      })
                     }
                   />
                   <Label htmlFor="citations" className="text-sm text-slate-700">
@@ -517,9 +435,12 @@ export default function AppWorkspace() {
                 <div className="flex items-center space-x-3">
                   <Checkbox
                     id="tables"
-                    checked={autoFitTables}
+                    checked={settings.autoFitTables}
                     onCheckedChange={(checked) =>
-                      setAutoFitTables(checked === true)
+                      setSettings({
+                        ...settings,
+                        autoFitTables: checked === true,
+                      })
                     }
                   />
                   <Label htmlFor="tables" className="text-sm text-slate-700">
@@ -529,9 +450,12 @@ export default function AppWorkspace() {
                 <div className="flex items-center space-x-3">
                   <Checkbox
                     id="images"
-                    checked={centerImages}
+                    checked={settings.centerImages}
                     onCheckedChange={(checked) =>
-                      setCenterImages(checked === true)
+                      setSettings({
+                        ...settings,
+                        centerImages: checked === true,
+                      })
                     }
                   />
                   <Label htmlFor="images" className="text-sm text-slate-700">
@@ -547,7 +471,7 @@ export default function AppWorkspace() {
         <div className="p-4 border-t border-slate-200 bg-slate-50">
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-medium">
-              {user?.email ? user.email.substring(0, 2).toUpperCase() : "U"}
+              {user?.email ? getUserInitials(user.email) : "U"}
             </div>
             <div className="flex-1 overflow-hidden">
               <p className="text-sm font-medium text-slate-900 truncate">

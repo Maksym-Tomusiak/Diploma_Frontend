@@ -13,7 +13,7 @@ export interface UserActionLogListResponse {
   logs: UserActionLog[];
   total: number;
   limit: number;
-  offset: number;
+  skip: number;
 }
 
 class UserActionLogService {
@@ -22,7 +22,7 @@ class UserActionLogService {
    */
   async getAllLogs(params?: {
     limit?: number;
-    offset?: number;
+    skip?: number;
     action_type?: string;
     user_id?: number;
     start_date?: string;
@@ -31,7 +31,7 @@ class UserActionLogService {
     const queryParams = new URLSearchParams();
 
     if (params?.limit) queryParams.append("limit", params.limit.toString());
-    if (params?.offset) queryParams.append("offset", params.offset.toString());
+    if (params?.skip) queryParams.append("skip", params.skip.toString());
     if (params?.action_type)
       queryParams.append("action_type", params.action_type);
     if (params?.user_id)
