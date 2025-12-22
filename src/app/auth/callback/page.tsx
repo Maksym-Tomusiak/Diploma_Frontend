@@ -26,7 +26,7 @@ export default function AuthCallbackPage() {
         return;
       }
 
-      // Store the token
+      // Store access token (refresh token is stored in HTTP-only cookie by backend)
       localStorage.setItem("token", token);
 
       try {

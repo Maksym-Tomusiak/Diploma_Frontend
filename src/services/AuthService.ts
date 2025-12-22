@@ -40,7 +40,7 @@ class AuthService {
     try {
       await httpClient.post("/v1/auth/logout");
     } finally {
-      // Clear stored tokens regardless of API response
+      // Clear stored access token (refresh token is cleared by backend via cookie deletion)
       if (typeof window !== "undefined") {
         localStorage.removeItem("token");
       }

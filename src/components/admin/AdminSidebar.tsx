@@ -88,7 +88,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
         </Button>
       </nav>
       <div className="p-4 border-t border-slate-800">
-        <Link href="/">
+        <Link href="/app">
           <Button
             variant="outline"
             className="w-full border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
