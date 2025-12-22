@@ -74,7 +74,12 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
         </Button>
         <Button
           variant="ghost"
-          className="w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800"
+          className={`w-full justify-start ${
+            activeTab === "analytics"
+              ? "bg-slate-800 text-white"
+              : "text-slate-300 hover:text-white hover:bg-slate-800"
+          }`}
+          onClick={() => onTabChange("analytics")}
         >
           <BarChart3 className="mr-3 h-5 w-5" />
           Analytics

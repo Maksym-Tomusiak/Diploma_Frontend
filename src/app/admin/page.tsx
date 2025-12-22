@@ -15,6 +15,7 @@ import { UsersTable } from "@/components/admin/UsersTable";
 import { LogsTable } from "@/components/admin/LogsTable";
 import { TemplatesTable } from "@/components/admin/TemplatesTable";
 import { FontsTable } from "@/components/admin/FontsTable";
+import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
 import { UserLogsModal } from "@/components/admin/UserLogsModal";
 import { useUsersManagement } from "@/hooks/useUsersManagement";
 import { useLogsManagement } from "@/hooks/useLogsManagement";
@@ -24,7 +25,7 @@ import { useFontsManagement } from "@/hooks/useFontsManagement";
 export default function AdminPage() {
   const router = useRouter();
   const { user: currentUser, isLoading: authLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState<ActiveTab>("users");
+  const [activeTab, setActiveTab] = useState<ActiveTab>("analytics");
   const [userLogsModal, setUserLogsModal] = useState<UserLogsModalState>({
     open: false,
     user: null,
@@ -93,6 +94,8 @@ export default function AdminPage() {
         return "Fonts Management";
       case "logs":
         return "Activity Logs";
+      case "analytics":
+        return "Analytics Dashboard";
       default:
         return "Admin Panel";
     }
@@ -116,7 +119,7 @@ export default function AdminPage() {
           </div>
         </header>
 
-        <div className="flex-1 p-8">
+        <div className="flex-1 p-8 min-h-0 overflow-auto">
           {activeTab === "users" && (
             <UsersTable
               users={usersData.users}
@@ -181,6 +184,8 @@ export default function AdminPage() {
               onRefresh={fontsData.handleRefresh}
             />
           )}
+
+          {activeTab === "analytics" && <AnalyticsDashboard />}
         </div>
       </main>
 

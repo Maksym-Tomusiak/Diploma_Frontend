@@ -53,17 +53,29 @@ export class UserService {
   /**
    * Ban a user (Admin only)
    */
-  async banUser(userId: number, signal?: AbortSignal): Promise<User> {
-    return httpClient.post<User>(`/v1/users/${userId}/ban`, undefined, signal);
+  async banUser(
+    userId: number,
+    reason?: string,
+    signal?: AbortSignal
+  ): Promise<User> {
+    return httpClient.post<User>(
+      `/v1/users/${userId}/ban`,
+      reason ? { reason } : undefined,
+      signal
+    );
   }
 
   /**
    * Unban a user (Admin only)
    */
-  async unbanUser(userId: number, signal?: AbortSignal): Promise<User> {
+  async unbanUser(
+    userId: number,
+    reason?: string,
+    signal?: AbortSignal
+  ): Promise<User> {
     return httpClient.post<User>(
       `/v1/users/${userId}/unban`,
-      undefined,
+      reason ? { reason } : undefined,
       signal
     );
   }

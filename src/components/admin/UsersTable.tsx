@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Search,
   MoreHorizontal,
@@ -24,6 +25,15 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { Pagination } from "@/components/ui/Pagination";
 import { userService } from "@/services/UserService";
 import { User, UserRole } from "@/types/auth";
@@ -58,6 +68,11 @@ export function UsersTable({
   onViewUserLogs,
 }: UsersTableProps) {
   const { toast } = useToast();
+  const [banDialogOpen, setBanDialogOpen] = useState(false);
+  const [unbanDialogOpen, setUnbanDialogOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [reason, setReason] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDeleteUser = async (userId: number) => {
     if (!confirm("Are you sure you want to delete this user?")) {
@@ -67,23 +82,43 @@ export function UsersTable({
     try {
       await userService.deleteUser(userId);
       setUsers(users.filter((u) => u.id !== userId));
+      toast({
+        title: "User deleted",
+        description: "User has been deleted successfully.",
+      });
     } catch (err: any) {
-      alert(err.response?.data?.detail || "Failed to delete user");
+      toast({
+        variant: "destructive",
+        title: "Failed to delete user",
+        description: err.response?.data?.detail || "Failed to delete user",
+      });
     }
   };
 
   const handleBanUser = async (user: User) => {
-    if (!confirm(`Ban user ${user.email}?`)) return;
+    setSelectedUser(user);
+    setReason("");
+    setBanDialogOpen(true);
+  };
 
+  const confirmBanUser = async () => {
+    if (!selectedUser) return;
+
+    setIsSubmitting(true);
     try {
-      await userService.banUser(user.id);
+      await userService.banUser(selectedUser.id, reason || undefined);
       setUsers(
-        users.map((u) => (u.id === user.id ? { ...u, is_banned: true } : u))
+        users.map((u) =>
+          u.id === selectedUser.id ? { ...u, is_banned: true } : u
+        )
       );
       toast({
         title: "User banned",
-        description: `${user.email} has been banned successfully.`,
+        description: `${selectedUser.email} has been banned successfully.`,
       });
+      setBanDialogOpen(false);
+      setSelectedUser(null);
+      setReason("");
     } catch (err: any) {
       toast({
         variant: "destructive",
@@ -92,21 +127,35 @@ export function UsersTable({
           err.response?.data?.detail ||
           "An error occurred while banning the user.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleUnbanUser = async (user: User) => {
-    if (!confirm(`Unban user ${user.email}?`)) return;
+    setSelectedUser(user);
+    setReason("");
+    setUnbanDialogOpen(true);
+  };
 
+  const confirmUnbanUser = async () => {
+    if (!selectedUser) return;
+
+    setIsSubmitting(true);
     try {
-      await userService.unbanUser(user.id);
+      await userService.unbanUser(selectedUser.id, reason || undefined);
       setUsers(
-        users.map((u) => (u.id === user.id ? { ...u, is_banned: false } : u))
+        users.map((u) =>
+          u.id === selectedUser.id ? { ...u, is_banned: false } : u
+        )
       );
       toast({
         title: "User unbanned",
-        description: `${user.email} has been unbanned successfully.`,
+        description: `${selectedUser.email} has been unbanned successfully.`,
       });
+      setUnbanDialogOpen(false);
+      setSelectedUser(null);
+      setReason("");
     } catch (err: any) {
       toast({
         variant: "destructive",
@@ -115,6 +164,8 @@ export function UsersTable({
           err.response?.data?.detail ||
           "An error occurred while unbanning the user.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -247,6 +298,10 @@ export function UsersTable({
                           <DropdownMenuItem
                             className="text-amber-600 focus:bg-amber-50 focus:text-amber-700"
                             onClick={() => handleBanUser(user)}
+                            disabled={
+                              user.id === currentUser?.id ||
+                              user.role === UserRole.ADMIN
+                            }
                           >
                             Ban user
                           </DropdownMenuItem>
@@ -254,6 +309,10 @@ export function UsersTable({
                           <DropdownMenuItem
                             className="text-emerald-600 focus:bg-emerald-50 focus:text-emerald-700"
                             onClick={() => handleUnbanUser(user)}
+                            disabled={
+                              user.id === currentUser?.id ||
+                              user.role === UserRole.ADMIN
+                            }
                           >
                             Unban user
                           </DropdownMenuItem>
@@ -261,7 +320,10 @@ export function UsersTable({
                         <DropdownMenuItem
                           className="text-red-600 focus:bg-red-50 focus:text-red-700"
                           onClick={() => handleDeleteUser(user.id)}
-                          disabled={user.id === currentUser?.id}
+                          disabled={
+                            user.id === currentUser?.id ||
+                            user.role === UserRole.ADMIN
+                          }
                         >
                           Delete user
                         </DropdownMenuItem>
@@ -281,6 +343,88 @@ export function UsersTable({
         onPageChange={onPageChange}
         className="mt-4"
       />
+
+      {/* Ban User Dialog */}
+      <Dialog open={banDialogOpen} onOpenChange={setBanDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Ban User</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to ban {selectedUser?.email}? You can
+              optionally provide a reason.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label htmlFor="ban-reason" className="text-sm font-medium">
+              Reason (optional)
+            </label>
+            <Textarea
+              id="ban-reason"
+              placeholder="Enter reason for banning this user..."
+              value={reason}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setReason(e.target.value)
+              }
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setBanDialogOpen(false)}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmBanUser}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Banning..." : "Ban User"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Unban User Dialog */}
+      <Dialog open={unbanDialogOpen} onOpenChange={setUnbanDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Unban User</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to unban {selectedUser?.email}? You can
+              optionally provide a reason.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <label htmlFor="unban-reason" className="text-sm font-medium">
+              Reason (optional)
+            </label>
+            <Textarea
+              id="unban-reason"
+              placeholder="Enter reason for unbanning this user..."
+              value={reason}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setReason(e.target.value)
+              }
+              rows={4}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setUnbanDialogOpen(false)}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </Button>
+            <Button onClick={confirmUnbanUser} disabled={isSubmitting}>
+              {isSubmitting ? "Unbanning..." : "Unban User"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

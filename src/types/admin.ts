@@ -2,7 +2,7 @@
  * Types for admin panel
  */
 
-export type ActiveTab = "users" | "logs" | "templates" | "fonts";
+export type ActiveTab = "users" | "logs" | "templates" | "fonts" | "analytics";
 
 export interface UserLogsModalState {
   open: boolean;
