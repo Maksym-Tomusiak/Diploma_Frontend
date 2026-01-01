@@ -42,14 +42,11 @@ import type {
   CheckResult,
   Issue,
   DocumentStatus,
+  TemplateParams,
+  PageMargins,
+  PageNumbering,
 } from "@/types/document";
-
-type WorkflowStatus =
-  | "idle"
-  | "checking"
-  | "checked"
-  | "formatting"
-  | "complete";
+import type { WorkflowStatus } from "@/types/workspace";
 
 export default function AppWorkspace() {
   const router = useRouter();
@@ -68,14 +65,27 @@ export default function AppWorkspace() {
   const [checkResult, setCheckResult] = useState<CheckResult | null>(null);
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [loadingDocuments, setLoadingDocuments] = useState(true);
+  const [isCustomMode, setIsCustomMode] = useState(false);
 
-  // Settings state
-  const [enableTypography, setEnableTypography] = useState(true);
-  const [enableMargins, setEnableMargins] = useState(true);
-  const [enableSpacing, setEnableSpacing] = useState(true);
-  const [fixCitations, setFixCitations] = useState(true);
-  const [autoFitTables, setAutoFitTables] = useState(true);
-  const [centerImages, setCenterImages] = useState(false);
+  // Template parameters state
+  const [templateParams, setTemplateParams] = useState<TemplateParams>({
+    font_size: 14,
+    line_spacing: 1.5,
+    margins: {
+      top: 20,
+      bottom: 20,
+      left: 30,
+      right: 15,
+    },
+    page_numbering: {
+      enabled: true,
+      start_page: 1,
+    },
+    skip_first_page: false,
+  });
+  const [selectedFontFamily, setSelectedFontFamily] = useState<string | null>(
+    null
+  );
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -88,13 +98,18 @@ export default function AppWorkspace() {
   useEffect(() => {
     const loadTemplates = async () => {
       try {
-        const data = await templateService.getTemplates();
-        setTemplates(data);
+        const response = await templateService.getTemplates(false, 0, 100);
+        const data = response.templates || [];
+        setTemplates(Array.isArray(data) ? data : []);
         if (data.length > 0) {
           setSelectedTemplate(data[0].id);
+          // Set initial params from first template
+          setTemplateParams(data[0].params);
+          setSelectedFontFamily(data[0].font_family);
         }
       } catch (error) {
         console.error("Failed to load templates:", error);
+        setTemplates([]);
       } finally {
         setLoadingTemplates(false);
       }
@@ -103,6 +118,17 @@ export default function AppWorkspace() {
       loadTemplates();
     }
   }, [isAuthenticated]);
+
+  // Update params when template changes
+  useEffect(() => {
+    if (selectedTemplate && !isCustomMode && templates.length > 0) {
+      const template = templates.find((t) => t.id === selectedTemplate);
+      if (template) {
+        setTemplateParams(template.params);
+        setSelectedFontFamily(template.font_family);
+      }
+    }
+  }, [selectedTemplate, isCustomMode, templates]);
 
   // Load user documents
   useEffect(() => {
@@ -164,13 +190,12 @@ export default function AppWorkspace() {
       return;
     }
 
-    try {
-      setLogs(["> Creating document entry..."]);
-      const doc = await documentService.createDocument({
-        google_doc_id: googleDocId,
-        template_id: selectedTemplate,
-      });
-      setCurrentDocument(doc);
+    const doc = await createDocument(
+      googleDocId,
+      selectedTemplate,
+      selectedDocName
+    );
+    if (doc) {
       setDocuments((prev) => [doc, ...prev]);
       setLogs((prev) => [
         ...prev,
@@ -266,9 +291,41 @@ export default function AppWorkspace() {
     setCurrentDocument(null);
     setGoogleDocId("");
     setSelectedDocName("");
-    setStatus("idle");
-    setLogs([]);
-    setCheckResult(null);
+  };
+
+  const handleTemplateChange = (templateId: string) => {
+    setSelectedTemplate(parseInt(templateId));
+    setIsCustomMode(false);
+  };
+
+  const handleParamChange = (key: string, value: any) => {
+    setIsCustomMode(true);
+    setTemplateParams((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  const handleMarginChange = (side: keyof PageMargins, value: number) => {
+    setIsCustomMode(true);
+    setTemplateParams((prev) => ({
+      ...prev,
+      margins: {
+        ...prev.margins,
+        [side]: value,
+      },
+    }));
+  };
+
+  const handlePageNumberingChange = (key: keyof PageNumbering, value: any) => {
+    setIsCustomMode(true);
+    setTemplateParams((prev) => ({
+      ...prev,
+      page_numbering: {
+        ...prev.page_numbering,
+        [key]: value,
+      },
+    }));
   };
 
   if (isLoading) {
@@ -353,16 +410,25 @@ export default function AppWorkspace() {
 
                       {/* Template Selection */}
                       <Select
-                        value={selectedTemplate?.toString()}
-                        onValueChange={(value) =>
-                          setSelectedTemplate(parseInt(value))
+                        value={
+                          isCustomMode ? "custom" : selectedTemplate?.toString()
                         }
+                        onValueChange={(value) => {
+                          if (value !== "custom") {
+                            handleTemplateChange(value);
+                          }
+                        }}
                         disabled={loadingTemplates}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select template" />
                         </SelectTrigger>
                         <SelectContent>
+                          {isCustomMode && (
+                            <SelectItem value="custom">
+                              Custom Settings
+                            </SelectItem>
+                          )}
                           {templates.map((template) => (
                             <SelectItem
                               key={template.id}
@@ -373,16 +439,6 @@ export default function AppWorkspace() {
                           ))}
                         </SelectContent>
                       </Select>
-
-                      {/* Load Button */}
-                      <Button
-                        onClick={handleCreateDocument}
-                        className="w-full bg-blue-600 hover:bg-blue-700"
-                        disabled={!googleDocId || !selectedTemplate}
-                      >
-                        <Check className="h-4 w-4 mr-2" />
-                        Load Document
-                      </Button>
 
                       {/* Change Document Button */}
                       <Button
@@ -443,100 +499,242 @@ export default function AppWorkspace() {
               </div>
             )}
 
-            {/* Settings Groups */}
+            {/* Template Parameters Editor */}
             <div className="space-y-6">
-              <Label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                Formatting Rules
-              </Label>
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  Template Settings
+                </Label>
+                {isCustomMode && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs text-orange-600 border-orange-300 bg-orange-50"
+                  >
+                    Custom
+                  </Badge>
+                )}
+              </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="font-fix" className="flex flex-col">
-                    <span className="text-sm font-medium text-slate-700">
-                      Typography
+              {/* Font Settings */}
+              <div className="space-y-3">
+                <Label className="text-xs font-semibold text-slate-600">
+                  Font
+                </Label>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-600">Family</span>
+                    <span className="font-mono text-slate-900">
+                      {selectedFontFamily || "Default"}
                     </span>
-                    <span className="text-xs text-slate-500">
-                      Times New Roman, 14pt
-                    </span>
-                  </Label>
-                  <Switch
-                    id="font-fix"
-                    checked={enableTypography}
-                    onCheckedChange={setEnableTypography}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="margin-fix" className="flex flex-col">
-                    <span className="text-sm font-medium text-slate-700">
-                      Margins (DSTU)
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      L:30, R:15, T:20, B:20 mm
-                    </span>
-                  </Label>
-                  <Switch
-                    id="margin-fix"
-                    checked={enableMargins}
-                    onCheckedChange={setEnableMargins}
-                  />
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="spacing-fix" className="flex flex-col">
-                    <span className="text-sm font-medium text-slate-700">
-                      Line Spacing
-                    </span>
-                    <span className="text-xs text-slate-500">
-                      1.5 lines, no paragraph space
-                    </span>
-                  </Label>
-                  <Switch
-                    id="spacing-fix"
-                    checked={enableSpacing}
-                    onCheckedChange={setEnableSpacing}
-                  />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <Label htmlFor="font-size" className="text-slate-600">
+                        Size (pt)
+                      </Label>
+                      <span className="font-mono text-slate-900">
+                        {templateParams.font_size}
+                      </span>
+                    </div>
+                    <Input
+                      id="font-size"
+                      type="number"
+                      min="8"
+                      max="24"
+                      step="0.5"
+                      value={templateParams.font_size}
+                      onChange={(e) =>
+                        handleParamChange(
+                          "font_size",
+                          parseFloat(e.target.value)
+                        )
+                      }
+                      className="h-8"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-sm">
+                      <Label htmlFor="line-spacing" className="text-slate-600">
+                        Line Spacing
+                      </Label>
+                      <span className="font-mono text-slate-900">
+                        {templateParams.line_spacing}
+                      </span>
+                    </div>
+                    <Input
+                      id="line-spacing"
+                      type="number"
+                      min="1"
+                      max="3"
+                      step="0.1"
+                      value={templateParams.line_spacing}
+                      onChange={(e) =>
+                        handleParamChange(
+                          "line_spacing",
+                          parseFloat(e.target.value)
+                        )
+                      }
+                      className="h-8"
+                    />
+                  </div>
                 </div>
               </div>
 
               <Separator />
 
+              {/* Margins */}
               <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <Checkbox
-                    id="citations"
-                    checked={fixCitations}
-                    onCheckedChange={(checked) =>
-                      setFixCitations(checked === true)
-                    }
-                  />
-                  <Label htmlFor="citations" className="text-sm text-slate-700">
-                    Fix citation format [1]
-                  </Label>
+                <Label className="text-xs font-semibold text-slate-600">
+                  Margins (mm)
+                </Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="margin-top"
+                      className="text-xs text-slate-600"
+                    >
+                      Top
+                    </Label>
+                    <Input
+                      id="margin-top"
+                      type="number"
+                      min="0"
+                      max="50"
+                      value={templateParams.margins.top}
+                      onChange={(e) =>
+                        handleMarginChange("top", parseFloat(e.target.value))
+                      }
+                      className="h-8"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="margin-bottom"
+                      className="text-xs text-slate-600"
+                    >
+                      Bottom
+                    </Label>
+                    <Input
+                      id="margin-bottom"
+                      type="number"
+                      min="0"
+                      max="50"
+                      value={templateParams.margins.bottom}
+                      onChange={(e) =>
+                        handleMarginChange("bottom", parseFloat(e.target.value))
+                      }
+                      className="h-8"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="margin-left"
+                      className="text-xs text-slate-600"
+                    >
+                      Left
+                    </Label>
+                    <Input
+                      id="margin-left"
+                      type="number"
+                      min="0"
+                      max="50"
+                      value={templateParams.margins.left}
+                      onChange={(e) =>
+                        handleMarginChange("left", parseFloat(e.target.value))
+                      }
+                      className="h-8"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label
+                      htmlFor="margin-right"
+                      className="text-xs text-slate-600"
+                    >
+                      Right
+                    </Label>
+                    <Input
+                      id="margin-right"
+                      type="number"
+                      min="0"
+                      max="50"
+                      value={templateParams.margins.right}
+                      onChange={(e) =>
+                        handleMarginChange("right", parseFloat(e.target.value))
+                      }
+                      className="h-8"
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center space-x-3">
-                  <Checkbox
-                    id="tables"
-                    checked={autoFitTables}
-                    onCheckedChange={(checked) =>
-                      setAutoFitTables(checked === true)
-                    }
-                  />
-                  <Label htmlFor="tables" className="text-sm text-slate-700">
-                    Auto-fit tables
-                  </Label>
+              </div>
+
+              <Separator />
+
+              {/* Page Numbering */}
+              <div className="space-y-3">
+                <Label className="text-xs font-semibold text-slate-600">
+                  Page Numbering
+                </Label>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label
+                      htmlFor="numbering-enabled"
+                      className="text-sm text-slate-700"
+                    >
+                      Enable numbering
+                    </Label>
+                    <Switch
+                      id="numbering-enabled"
+                      checked={templateParams.page_numbering.enabled}
+                      onCheckedChange={(checked) =>
+                        handlePageNumberingChange("enabled", checked)
+                      }
+                    />
+                  </div>
+                  {templateParams.page_numbering.enabled && (
+                    <div className="space-y-1">
+                      <Label
+                        htmlFor="start-page"
+                        className="text-xs text-slate-600"
+                      >
+                        Start from page
+                      </Label>
+                      <Input
+                        id="start-page"
+                        type="number"
+                        min="1"
+                        max="10"
+                        value={templateParams.page_numbering.start_page}
+                        onChange={(e) =>
+                          handlePageNumberingChange(
+                            "start_page",
+                            parseInt(e.target.value)
+                          )
+                        }
+                        className="h-8"
+                      />
+                    </div>
+                  )}
                 </div>
-                <div className="flex items-center space-x-3">
-                  <Checkbox
-                    id="images"
-                    checked={centerImages}
+              </div>
+
+              <Separator />
+
+              {/* Additional Options */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label
+                    htmlFor="skip-first"
+                    className="text-sm text-slate-700"
+                  >
+                    Skip first page
+                  </Label>
+                  <Switch
+                    id="skip-first"
+                    checked={templateParams.skip_first_page}
                     onCheckedChange={(checked) =>
-                      setCenterImages(checked === true)
+                      handleParamChange("skip_first_page", checked)
                     }
                   />
-                  <Label htmlFor="images" className="text-sm text-slate-700">
-                    Center align images
-                  </Label>
                 </div>
               </div>
             </div>
@@ -581,11 +779,17 @@ export default function AppWorkspace() {
               variant="outline"
               className="border-blue-200 text-blue-700 hover:bg-blue-50"
               disabled={
-                !currentDocument ||
+                !googleDocId ||
+                !selectedTemplate ||
                 status === "checking" ||
                 status === "formatting"
               }
-              onClick={startCheck}
+              onClick={async () => {
+                if (!currentDocument) {
+                  await handleCreateDocument();
+                }
+                await startCheck();
+              }}
             >
               {status === "checking" ? (
                 <RotateCw className="mr-2 h-4 w-4 animate-spin" />
