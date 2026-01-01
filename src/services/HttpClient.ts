@@ -125,9 +125,10 @@ export class HttpClient {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+      // Refresh token is sent automatically in HTTP-only cookie
       const refreshInstance = axios.create({
         baseURL: apiUrl,
-        withCredentials: true,
+        withCredentials: true, // Important: sends cookies with request
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -135,9 +136,21 @@ export class HttpClient {
       });
 
       const response = await refreshInstance.post(`/v1/auth/refresh`, {});
-      return response.data?.access_token ?? null;
+
+      const { access_token } = response.data;
+
+      // Store new access token (refresh token is updated in cookie by backend)
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", access_token);
+      }
+
+      return access_token;
     } catch (e) {
       console.error("Token refresh failed", e);
+      // Clear access token on refresh failure
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token");
+      }
       return null;
     }
   }
