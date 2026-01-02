@@ -17,6 +17,8 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  refreshGoogleToken: () => Promise<string>;
+  updateUserGoogleToken: (newToken: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -67,6 +69,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
+  const refreshGoogleToken = async (): Promise<string> => {
+    try {
+      const newToken = await authService.refreshGoogleToken();
+      // Update user object with new token
+      if (user) {
+        setUser({ ...user, google_access_token: newToken });
+      }
+      return newToken;
+    } catch (error) {
+      console.error("Failed to refresh Google token:", error);
+      throw error;
+    }
+  };
+
+  const updateUserGoogleToken = (newToken: string) => {
+    if (user) {
+      setUser({ ...user, google_access_token: newToken });
+    }
+  };
+
   const value: AuthContextType = {
     user,
     isLoading,
@@ -74,6 +96,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loginWithGoogle,
     logout,
     refreshUser,
+    refreshGoogleToken,
+    updateUserGoogleToken,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

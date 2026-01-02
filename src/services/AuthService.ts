@@ -70,6 +70,17 @@ class AuthService {
     const authUrl = await this.getGoogleAuthUrl();
     window.location.href = authUrl;
   }
+
+  /**
+   * Refresh Google access token using stored Google refresh token
+   */
+  async refreshGoogleToken(): Promise<string> {
+    const response = await httpClient.post<{
+      google_access_token: string;
+      message: string;
+    }>("/v1/auth/refresh-google-token");
+    return response.google_access_token;
+  }
 }
 
 export const authService = new AuthService();

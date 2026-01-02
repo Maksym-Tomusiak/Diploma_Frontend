@@ -49,7 +49,8 @@ export function useGooglePicker() {
   const openPicker = (
     accessToken: string,
     onSelect: (doc: GoogleDocument) => void,
-    onCancel?: () => void
+    onCancel?: () => void,
+    onTokenExpired?: () => Promise<string>
   ) => {
     if (!isLoaded) {
       console.error("Google Picker API not loaded yet");
@@ -63,7 +64,7 @@ export function useGooglePicker() {
 
     const appId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.split("-")[0] || "";
 
-    const picker = new window.google.picker.PickerBuilder()
+    let pickerBuilder = new window.google.picker.PickerBuilder()
       .addView(
         new window.google.picker.DocsView(window.google.picker.ViewId.DOCUMENTS)
           .setMode(window.google.picker.DocsViewMode.LIST)
@@ -72,7 +73,7 @@ export function useGooglePicker() {
       .setOAuthToken(accessToken) // Use token from backend OAuth flow
       .setDeveloperKey(process.env.NEXT_PUBLIC_GOOGLE_API_KEY || "")
       .setAppId(appId)
-      .setCallback((data: any) => {
+      .setCallback(async (data: any) => {
         if (data.action === window.google.picker.Action.PICKED) {
           const doc = data.docs[0];
           onSelect({
@@ -83,11 +84,23 @@ export function useGooglePicker() {
           });
         } else if (data.action === window.google.picker.Action.CANCEL) {
           if (onCancel) onCancel();
+        } else if (data.action === "loaded" && data.error && onTokenExpired) {
+          // Token expired error - try to refresh and reopen picker
+          try {
+            const newToken = await onTokenExpired();
+            if (newToken) {
+              // Reopen picker with new token
+              openPicker(newToken, onSelect, onCancel, onTokenExpired);
+            }
+          } catch (error) {
+            console.error("Failed to refresh token:", error);
+            if (onCancel) onCancel();
+          }
         }
       })
-      .setTitle("Select a Google Document")
-      .build();
+      .setTitle("Select a Google Document");
 
+    const picker = pickerBuilder.build();
     picker.setVisible(true);
   };
 

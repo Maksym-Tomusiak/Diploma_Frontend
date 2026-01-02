@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { documentService } from "@/services/DocumentService";
 import { checkResultService } from "@/services/CheckResultService";
-import type { Document, CheckResult } from "@/types/document";
+import type {
+  Document,
+  CheckResult,
+  CheckDocumentRequest,
+  TemplateParams,
+} from "@/types/document";
 import type { WorkflowStatus } from "@/types/workspace";
 
 export function useDocumentWorkflow() {
@@ -47,8 +52,13 @@ export function useDocumentWorkflow() {
     }
   };
 
-  const startCheck = async () => {
-    if (!currentDocument) {
+  const startCheck = async (
+    checkRequest: CheckDocumentRequest,
+    documentToCheck?: Document
+  ) => {
+    const docToUse = documentToCheck || currentDocument;
+
+    if (!docToUse) {
       setLogs(["> Error: No document selected"]);
       return;
     }
@@ -57,8 +67,11 @@ export function useDocumentWorkflow() {
     setLogs(["> Initializing format checker..."]);
 
     try {
-      // Trigger check
-      await documentService.checkDocument(currentDocument.id);
+      // Trigger check with template or custom params - returns the new result directly
+      const newCheckResult = await documentService.checkDocument(
+        docToUse.id,
+        checkRequest
+      );
 
       // Simulate progress steps
       const steps = [
@@ -75,19 +88,12 @@ export function useDocumentWorkflow() {
         setLogs((prev) => [...prev, `> ${steps[i]} OK`]);
       }
 
-      // Get check results
-      const results = await checkResultService.getDocumentCheckResults(
-        currentDocument.id
-      );
-
-      if (results.length > 0) {
-        const latestResult = results[0];
-        setCheckResult(latestResult);
-        setLogs((prev) => [
-          ...prev,
-          `> Analysis complete. ${latestResult.issues_count} issue(s) found.`,
-        ]);
-      }
+      // Use the result returned from the check endpoint directly
+      setCheckResult(newCheckResult);
+      setLogs((prev) => [
+        ...prev,
+        `> Analysis complete. ${newCheckResult.issues_count} issue(s) found.`,
+      ]);
 
       setStatus("checked");
     } catch (error: any) {

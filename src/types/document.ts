@@ -11,6 +11,7 @@ export interface Document {
   title: string | null;
   status: DocumentStatus;
   created_at: string;
+  last_checked_at: string | null;
 }
 
 export interface Font {
@@ -80,12 +81,23 @@ export interface Issue {
   type: string;
   severity: "low" | "medium" | "high";
   details: string;
+  expected?: string;
+  actual?: string;
+}
+
+// Request body for checking a document
+export interface CheckDocumentRequest {
+  template_id?: number;
+  custom_params?: TemplateParams;
+  font_family?: string;
 }
 
 export interface CheckResult {
   id: number;
   document_id: number;
-  template_id: number;
+  template_id: number | null;
+  custom_params?: TemplateParams | null;
+  custom_font_family?: string | null;
   passed: boolean;
   overall_score: number | null;
   issues_count: number;
