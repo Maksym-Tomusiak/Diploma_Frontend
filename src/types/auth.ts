@@ -20,7 +20,7 @@ export enum UserRole {
 }
 
 export interface User {
-  id: number;
+  id: string;
   email: string;
   role: UserRole;
   is_banned?: boolean;

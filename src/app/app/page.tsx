@@ -77,7 +77,7 @@ export default function AppWorkspace() {
     }
   }, [isAuthenticated]);
 
-  const handleSelectDocument = () => {
+  const handleSelectDocument = async () => {
     if (!isPickerLoaded) {
       setLogs(["Error: Google Picker is not loaded yet. Please try again."]);
       return;
@@ -90,7 +90,7 @@ export default function AppWorkspace() {
       return;
     }
 
-    openPicker(
+    await openPicker(
       googleToken,
       async (doc: GoogleDocument) => {
         setGoogleDocId(doc.id);

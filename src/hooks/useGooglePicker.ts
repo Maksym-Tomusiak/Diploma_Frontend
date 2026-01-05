@@ -46,7 +46,7 @@ export function useGooglePicker() {
   }, []);
 
   // Now accepts accessToken as a parameter from backend session
-  const openPicker = (
+  const openPicker = async (
     accessToken: string,
     onSelect: (doc: GoogleDocument) => void,
     onCancel?: () => void,
@@ -62,9 +62,42 @@ export function useGooglePicker() {
       return;
     }
 
+    // Test if token is valid by making a quick API call
+    try {
+      const response = await fetch(
+        "https://www.googleapis.com/drive/v3/about?fields=user",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      // If token is expired (401) or forbidden (403), refresh it
+      if (
+        (response.status === 401 || response.status === 403) &&
+        onTokenExpired
+      ) {
+        console.log("Token expired or invalid, refreshing...");
+        const newToken = await onTokenExpired();
+        if (newToken) {
+          // Retry with new token
+          accessToken = newToken;
+        } else {
+          throw new Error("Failed to refresh token");
+        }
+      } else if (!response.ok) {
+        throw new Error(`Token validation failed: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error validating token:", error);
+      if (onCancel) onCancel();
+      return;
+    }
+
     const appId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.split("-")[0] || "";
 
-    let pickerBuilder = new window.google.picker.PickerBuilder()
+    const pickerBuilder = new window.google.picker.PickerBuilder()
       .addView(
         new window.google.picker.DocsView(window.google.picker.ViewId.DOCUMENTS)
           .setMode(window.google.picker.DocsViewMode.LIST)
@@ -84,18 +117,6 @@ export function useGooglePicker() {
           });
         } else if (data.action === window.google.picker.Action.CANCEL) {
           if (onCancel) onCancel();
-        } else if (data.action === "loaded" && data.error && onTokenExpired) {
-          // Token expired error - try to refresh and reopen picker
-          try {
-            const newToken = await onTokenExpired();
-            if (newToken) {
-              // Reopen picker with new token
-              openPicker(newToken, onSelect, onCancel, onTokenExpired);
-            }
-          } catch (error) {
-            console.error("Failed to refresh token:", error);
-            if (onCancel) onCancel();
-          }
         }
       })
       .setTitle("Select a Google Document");

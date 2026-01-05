@@ -6,7 +6,7 @@ export enum DocumentStatus {
 }
 
 export interface Document {
-  id: number;
+  id: string;
   google_doc_id: string;
   title: string | null;
   status: DocumentStatus;
@@ -93,8 +93,8 @@ export interface CheckDocumentRequest {
 }
 
 export interface CheckResult {
-  id: number;
-  document_id: number;
+  id: string;
+  document_id: string;
   template_id: number | null;
   custom_params?: TemplateParams | null;
   custom_font_family?: string | null;
