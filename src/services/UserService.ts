@@ -28,14 +28,14 @@ export class UserService {
   /**
    * Get user by ID
    */
-  async getUser(userId: number, signal?: AbortSignal): Promise<User> {
+  async getUser(userId: string, signal?: AbortSignal): Promise<User> {
     return httpClient.get<User>(`/v1/users/${userId}`, signal);
   }
 
   /**
    * Delete user (Admin only)
    */
-  async deleteUser(userId: number, signal?: AbortSignal): Promise<User> {
+  async deleteUser(userId: string, signal?: AbortSignal): Promise<User> {
     return httpClient.delete<User>(`/v1/users/${userId}`, signal);
   }
 
@@ -43,7 +43,7 @@ export class UserService {
    * Update user role (Admin only)
    */
   async updateUserRole(
-    userId: number,
+    userId: string,
     role: UserRole,
     signal?: AbortSignal
   ): Promise<User> {
@@ -54,7 +54,7 @@ export class UserService {
    * Ban a user (Admin only)
    */
   async banUser(
-    userId: number,
+    userId: string,
     reason?: string,
     signal?: AbortSignal
   ): Promise<User> {
@@ -69,7 +69,7 @@ export class UserService {
    * Unban a user (Admin only)
    */
   async unbanUser(
-    userId: number,
+    userId: string,
     reason?: string,
     signal?: AbortSignal
   ): Promise<User> {

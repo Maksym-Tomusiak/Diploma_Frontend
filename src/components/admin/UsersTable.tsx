@@ -74,7 +74,7 @@ export function UsersTable({
   const [reason, setReason] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDeleteUser = async (userId: number) => {
+  const handleDeleteUser = async (userId: string) => {
     if (!confirm("Are you sure you want to delete this user?")) {
       return;
     }
@@ -212,9 +212,6 @@ export function UsersTable({
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow className="border-b border-slate-200 hover:bg-slate-50">
-                <TableHead className="w-[50px] font-semibold text-slate-700">
-                  ID
-                </TableHead>
                 <TableHead className="w-[300px] font-semibold text-slate-700">
                   Email
                 </TableHead>
@@ -235,9 +232,6 @@ export function UsersTable({
                   key={user.id}
                   className="hover:bg-slate-50 border-b border-slate-100 last:border-0 transition-colors"
                 >
-                  <TableCell className="text-slate-500 text-sm">
-                    {user.id}
-                  </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9 border border-slate-100">

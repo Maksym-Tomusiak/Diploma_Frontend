@@ -15,7 +15,7 @@ export function useLogsManagement(
   const [pageSize] = useState(10);
   const [logsLoading, setLogsLoading] = useState(false);
   const [logsError, setLogsError] = useState<string | null>(null);
-  const [logsFilterUserId, setLogsFilterUserId] = useState<number | null>(null);
+  const [logsFilterUserId, setLogsFilterUserId] = useState<string | null>(null);
   const [logsFilterActionType, setLogsFilterActionType] = useState<string>("");
 
   const totalPages = Math.ceil(logsTotal / pageSize);

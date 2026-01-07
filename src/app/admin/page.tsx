@@ -65,7 +65,7 @@ export default function AdminPage() {
     }
   };
 
-  const handleViewAllUserLogs = (userId: number) => {
+  const handleViewAllUserLogs = (userId: string) => {
     setUserLogsModal({ open: false, user: null, logs: [] });
     setActiveTab("logs");
     logsData.setLogsFilterUserId(userId);

@@ -19,7 +19,7 @@ class DocumentService {
   /**
    * Get a specific document by ID
    */
-  async getDocument(documentId: number): Promise<Document> {
+  async getDocument(documentId: string): Promise<Document> {
     return httpClient.get<Document>(`/v1/documents/${documentId}`);
   }
 
@@ -49,7 +49,7 @@ class DocumentService {
   /**
    * Delete a document
    */
-  async deleteDocument(documentId: number): Promise<void> {
+  async deleteDocument(documentId: string): Promise<void> {
     return httpClient.delete(`/v1/documents/${documentId}`);
   }
 
@@ -57,7 +57,7 @@ class DocumentService {
    * Trigger format check for a document
    */
   async checkDocument(
-    documentId: number,
+    documentId: string,
     data: CheckDocumentRequest
   ): Promise<CheckResult> {
     return httpClient.post<CheckResult>(

@@ -36,8 +36,8 @@ interface LogsTableProps {
   pageSize: number;
   logsLoading: boolean;
   logsError: string | null;
-  logsFilterUserId: number | null;
-  setLogsFilterUserId: (userId: number | null) => void;
+  logsFilterUserId: string | null;
+  setLogsFilterUserId: (userId: string | null) => void;
   logsFilterActionType: string;
   setLogsFilterActionType: (actionType: string) => void;
   handleClearLogsFilter: () => void;
@@ -66,7 +66,7 @@ export function LogsTable({
         <Select
           value={logsFilterUserId?.toString() || ""}
           onValueChange={(value: string) => {
-            setLogsFilterUserId(value === "__ALL__" ? null : parseInt(value));
+            setLogsFilterUserId(value === "__ALL__" ? null : value);
           }}
         >
           <SelectTrigger className="w-[250px] bg-white border-slate-200">

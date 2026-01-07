@@ -24,7 +24,7 @@ class UserActionLogService {
     limit?: number;
     skip?: number;
     action_type?: string;
-    user_id?: number;
+    user_id?: string;
     start_date?: string;
     end_date?: string;
   }): Promise<UserActionLogListResponse> {

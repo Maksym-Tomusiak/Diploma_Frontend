@@ -18,7 +18,7 @@ interface UserLogsModalProps {
   user: User | null;
   logs: UserActionLog[];
   isLoading: boolean;
-  onViewAllLogs: (userId: number) => void;
+  onViewAllLogs: (userId: string) => void;
 }
 
 export function UserLogsModal({
