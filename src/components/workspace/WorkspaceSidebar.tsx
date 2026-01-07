@@ -11,7 +11,6 @@ import type {
   Template,
   TemplateParams,
   PageMargins,
-  PageNumbering,
 } from "@/types/document";
 
 interface WorkspaceSidebarProps {
@@ -37,7 +36,10 @@ interface WorkspaceSidebarProps {
   onTemplateChange: (templateId: string) => void;
   onParamChange: (key: string, value: any) => void;
   onMarginChange: (side: keyof PageMargins, value: number) => void;
-  onPageNumberingChange: (key: keyof PageNumbering, value: any) => void;
+  onPageNumberingChange: (
+    key: "check_numbering" | "start_from_number" | "skip_first_page",
+    value: any
+  ) => void;
   onFontFamilyChange: (fontFamily: string) => void;
   onFontSearch: (query: string) => Promise<{ value: string; label: string }[]>;
   onNavigateHome: () => void;

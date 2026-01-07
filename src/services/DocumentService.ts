@@ -4,6 +4,8 @@ import type {
   DocumentCreate,
   CheckDocumentRequest,
   CheckResult,
+  FormatDocumentRequest,
+  FormatResult,
 } from "@/types/document";
 
 class DocumentService {
@@ -67,8 +69,14 @@ class DocumentService {
   /**
    * Apply formatting to a document
    */
-  async formatDocument(documentId: number): Promise<void> {
-    return httpClient.post(`/v1/documents/${documentId}/format`);
+  async formatDocument(
+    documentId: string,
+    data: FormatDocumentRequest
+  ): Promise<FormatResult> {
+    return httpClient.post<FormatResult>(
+      `/v1/documents/${documentId}/format`,
+      data
+    );
   }
 }
 

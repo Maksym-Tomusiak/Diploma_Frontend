@@ -13,12 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SearchCombobox } from "@/components/ui/search-combobox";
-import type {
-  TemplateParams,
-  PageMargins,
-  PageNumbering,
-  Template,
-} from "@/types/document";
+import type { TemplateParams, PageMargins, Template } from "@/types/document";
 
 interface TemplateParamsEditorProps {
   templateParams: TemplateParams;
@@ -29,7 +24,10 @@ interface TemplateParamsEditorProps {
   loadingTemplates: boolean;
   onParamChange: (key: string, value: any) => void;
   onMarginChange: (side: keyof PageMargins, value: number) => void;
-  onPageNumberingChange: (key: keyof PageNumbering, value: any) => void;
+  onPageNumberingChange: (
+    key: "check_numbering" | "start_from_number" | "skip_first_page",
+    value: any
+  ) => void;
   onFontFamilyChange: (fontFamily: string) => void;
   onFontSearch: (query: string) => Promise<{ value: string; label: string }[]>;
   onTemplateChange: (templateId: string) => void;
@@ -200,28 +198,31 @@ export function TemplateParamsEditor({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="page-numbering" className="text-sm text-slate-700">
-              Enable page numbers
+              Check page numbers
             </Label>
             <Checkbox
               id="page-numbering"
-              checked={templateParams.page_numbering.enabled}
+              checked={templateParams.check_numbering}
               onCheckedChange={(checked) =>
-                onPageNumberingChange("enabled", checked === true)
+                onPageNumberingChange("check_numbering", checked === true)
               }
             />
           </div>
-          {templateParams.page_numbering.enabled && (
+          {templateParams.check_numbering && (
             <div className="space-y-1">
-              <Label htmlFor="start-page" className="text-xs text-slate-600">
-                Start Page
+              <Label htmlFor="start-number" className="text-xs text-slate-600">
+                Start from number
               </Label>
               <Input
-                id="start-page"
+                id="start-number"
                 type="number"
                 min="1"
-                value={templateParams.page_numbering.start_page}
+                value={templateParams.start_from_number}
                 onChange={(e) =>
-                  onPageNumberingChange("start_page", parseInt(e.target.value))
+                  onPageNumberingChange(
+                    "start_from_number",
+                    parseInt(e.target.value)
+                  )
                 }
                 className="h-8"
               />
@@ -235,7 +236,7 @@ export function TemplateParamsEditor({
               id="skip-first"
               checked={templateParams.skip_first_page}
               onCheckedChange={(checked) =>
-                onParamChange("skip_first_page", checked === true)
+                onPageNumberingChange("skip_first_page", checked === true)
               }
             />
           </div>

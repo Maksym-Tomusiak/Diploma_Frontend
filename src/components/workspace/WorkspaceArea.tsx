@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import type { CheckResult, Document } from "@/types/document";
+import type { CheckResult, Document, FormatResult } from "@/types/document";
 import type { WorkflowStatus } from "@/types/workspace";
 
 interface WorkspaceAreaProps {
@@ -19,6 +19,7 @@ interface WorkspaceAreaProps {
   status: WorkflowStatus;
   logs: string[];
   checkResult: CheckResult | null;
+  formatResult: FormatResult | null;
   googleDocId: string;
   selectedTemplate: number | null;
   isCustomMode: boolean;
@@ -31,6 +32,7 @@ export function WorkspaceArea({
   status,
   logs,
   checkResult,
+  formatResult,
   googleDocId,
   selectedTemplate,
   isCustomMode,
@@ -65,7 +67,7 @@ export function WorkspaceArea({
           </Button>
           <Button
             className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-            disabled={status !== "checked"}
+            disabled={status !== "checked" && status !== "complete"}
             onClick={onFormat}
           >
             <Play className="mr-2 h-4 w-4 fill-current" />
@@ -200,6 +202,89 @@ export function WorkspaceArea({
                                         )}
                                         {issue.actual && (
                                           <div>Actual: {issue.actual}</div>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+
+              {/* Format Results */}
+              {formatResult && status === "complete" && (
+                <div className="border-t border-slate-200 p-6 bg-slate-50">
+                  <Card className="max-w-2xl">
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold text-slate-900">
+                          Format Results
+                        </h3>
+                        <Badge
+                          variant={
+                            formatResult.success ? "default" : "destructive"
+                          }
+                          className={
+                            formatResult.success
+                              ? "bg-green-100 text-green-700 hover:bg-green-100"
+                              : ""
+                          }
+                        >
+                          {formatResult.success ? "Success" : "Failed"}
+                        </Badge>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-slate-600">
+                            Changes Applied:
+                          </span>
+                          <span className="font-semibold text-slate-900">
+                            {formatResult.changes_applied}
+                          </span>
+                        </div>
+                        {formatResult.changes &&
+                          formatResult.changes.length > 0 && (
+                            <div className="mt-4 space-y-2">
+                              <h4 className="text-sm font-semibold text-slate-900">
+                                Applied Changes:
+                              </h4>
+                              <div className="space-y-2 max-h-48 overflow-y-auto">
+                                {formatResult.changes.map((change, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="p-3 bg-white border border-slate-200 rounded text-sm"
+                                  >
+                                    <div className="flex items-start justify-between gap-2">
+                                      <span className="font-medium text-slate-900">
+                                        {change.type.replace(/_/g, " ")}
+                                      </span>
+                                      <CheckCircle className="h-4 w-4 text-green-500" />
+                                    </div>
+                                    <p className="text-slate-600 mt-1">
+                                      {change.description}
+                                    </p>
+                                    {(change.before || change.after) && (
+                                      <div className="mt-2 text-xs text-slate-500 grid grid-cols-2 gap-2">
+                                        {change.before && (
+                                          <div>
+                                            <span className="text-slate-400">
+                                              Before:
+                                            </span>{" "}
+                                            {change.before}
+                                          </div>
+                                        )}
+                                        {change.after && (
+                                          <div>
+                                            <span className="text-slate-400">
+                                              After:
+                                            </span>{" "}
+                                            {change.after}
+                                          </div>
                                         )}
                                       </div>
                                     )}

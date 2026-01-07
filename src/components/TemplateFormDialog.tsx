@@ -99,11 +99,9 @@ export function TemplateFormDialog({
         setMarginBottom(String(template.params.margins?.bottom || 20));
         setMarginLeft(String(template.params.margins?.left || 30));
         setMarginRight(String(template.params.margins?.right || 10));
-        setPageNumberingEnabled(
-          template.params.page_numbering?.enabled ?? true
-        );
+        setPageNumberingEnabled(template.params.check_numbering ?? true);
         setPageNumberingStartPage(
-          String(template.params.page_numbering?.start_page || 1)
+          String(template.params.start_from_number || 1)
         );
         setSkipFirstPage(template.params.skip_first_page || false);
       } else {
@@ -188,10 +186,8 @@ export function TemplateFormDialog({
         left: marginLeftNum,
         right: marginRightNum,
       },
-      page_numbering: {
-        enabled: pageNumberingEnabled,
-        start_page: startPageNum,
-      },
+      check_numbering: pageNumberingEnabled,
+      start_from_number: startPageNum,
       skip_first_page: skipFirstPage,
     };
 
@@ -406,7 +402,7 @@ export function TemplateFormDialog({
             {pageNumberingEnabled && (
               <div className="space-y-2">
                 <Label htmlFor="pageNumberingStartPage">
-                  Почати нумерацію зі сторінки *
+                  Починати нумерацію з номера *
                 </Label>
                 <Input
                   id="pageNumberingStartPage"

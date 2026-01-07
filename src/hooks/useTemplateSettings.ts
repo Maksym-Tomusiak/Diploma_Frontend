@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import { templateService } from "@/services/TemplateService";
 import { fontService } from "@/services/FontService";
-import type {
-  Template,
-  TemplateParams,
-  PageMargins,
-  PageNumbering,
-} from "@/types/document";
+import type { Template, TemplateParams, PageMargins } from "@/types/document";
 
 export function useTemplateSettings(isAuthenticated: boolean) {
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
@@ -26,10 +21,8 @@ export function useTemplateSettings(isAuthenticated: boolean) {
       left: 30,
       right: 15,
     },
-    page_numbering: {
-      enabled: true,
-      start_page: 1,
-    },
+    check_numbering: true,
+    start_from_number: 1,
     skip_first_page: false,
   });
 
@@ -92,14 +85,14 @@ export function useTemplateSettings(isAuthenticated: boolean) {
     }));
   };
 
-  const handlePageNumberingChange = (key: keyof PageNumbering, value: any) => {
+  const handlePageNumberingChange = (
+    key: "check_numbering" | "start_from_number" | "skip_first_page",
+    value: any
+  ) => {
     setIsCustomMode(true);
     setTemplateParams((prev) => ({
       ...prev,
-      page_numbering: {
-        ...prev.page_numbering,
-        [key]: value,
-      },
+      [key]: value,
     }));
   };
 

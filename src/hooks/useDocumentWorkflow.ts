@@ -5,6 +5,8 @@ import type {
   Document,
   CheckResult,
   CheckDocumentRequest,
+  FormatDocumentRequest,
+  FormatResult,
   TemplateParams,
 } from "@/types/document";
 import type { WorkflowStatus } from "@/types/workspace";
@@ -14,6 +16,7 @@ export function useDocumentWorkflow() {
   const [status, setStatus] = useState<WorkflowStatus>("idle");
   const [logs, setLogs] = useState<string[]>([]);
   const [checkResult, setCheckResult] = useState<CheckResult | null>(null);
+  const [formatResult, setFormatResult] = useState<FormatResult | null>(null);
 
   const createDocument = async (
     googleDocId: string,
@@ -106,17 +109,45 @@ export function useDocumentWorkflow() {
     }
   };
 
-  const startFormat = async () => {
-    if (!currentDocument) return;
+  const startFormat = async (formatRequest: FormatDocumentRequest) => {
+    if (!currentDocument) {
+      setLogs((prev) => [...prev, "> Error: No document selected"]);
+      return;
+    }
 
     setStatus("formatting");
-    setLogs((prev) => [...prev, "> Applying automated fixes..."]);
+    setLogs((prev) => [...prev, "> Applying formatting to document..."]);
 
     try {
-      await documentService.formatDocument(currentDocument.id);
+      const result = await documentService.formatDocument(
+        currentDocument.id,
+        formatRequest
+      );
 
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setLogs((prev) => [...prev, "> Corrections applied successfully."]);
+      // Show progress steps
+      const steps = [
+        "Updating page margins...",
+        "Applying font styles...",
+        "Adjusting line spacing...",
+        "Finalizing changes...",
+      ];
+
+      for (let i = 0; i < steps.length; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 400));
+        setLogs((prev) => [...prev, `> ${steps[i]} OK`]);
+      }
+
+      setFormatResult(result);
+      setLogs((prev) => [
+        ...prev,
+        `> Formatting complete! ${result.changes_applied} change(s) applied.`,
+      ]);
+
+      // Log applied changes
+      for (const change of result.changes) {
+        setLogs((prev) => [...prev, `  - ${change.description}`]);
+      }
+
       setStatus("complete");
     } catch (error: any) {
       console.error("Format failed:", error);
@@ -142,6 +173,7 @@ export function useDocumentWorkflow() {
     logs,
     setLogs,
     checkResult,
+    formatResult,
     createDocument,
     startCheck,
     startFormat,

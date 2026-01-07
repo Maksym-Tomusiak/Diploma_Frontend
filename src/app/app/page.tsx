@@ -25,6 +25,7 @@ export default function AppWorkspace() {
     logs,
     setLogs,
     checkResult,
+    formatResult,
     createDocument,
     startCheck,
     startFormat,
@@ -186,6 +187,27 @@ export default function AppWorkspace() {
     }
   };
 
+  const handleFormat = async () => {
+    if (!currentDocument) {
+      setLogs([
+        "Error: No document to format. Please check the document first.",
+      ]);
+      return;
+    }
+
+    // Build format request based on mode
+    if (isCustomMode) {
+      await startFormat({
+        custom_params: templateParams,
+        font_family: selectedFontFamily || undefined,
+      });
+    } else if (selectedTemplate) {
+      await startFormat({
+        template_id: selectedTemplate,
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
@@ -229,11 +251,12 @@ export default function AppWorkspace() {
         status={status}
         logs={logs}
         checkResult={checkResult}
+        formatResult={formatResult}
         googleDocId={googleDocId}
         selectedTemplate={selectedTemplate}
         isCustomMode={isCustomMode}
         onCheck={handleCheck}
-        onFormat={startFormat}
+        onFormat={handleFormat}
       />
     </div>
   );

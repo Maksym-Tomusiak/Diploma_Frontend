@@ -49,17 +49,13 @@ export interface PageMargins {
   right: number; // Відступ справа (мм)
 }
 
-export interface PageNumbering {
-  enabled: boolean; // Чи включена нумерація сторінок
-  start_page: number; // З якої сторінки починати нумерацію
-}
-
 export interface TemplateParams {
   font_size: number; // Розмір шрифту
   line_spacing: number; // Міжрядковий інтервал
   margins: PageMargins; // Відступи для сторінок
-  page_numbering: PageNumbering; // Налаштування нумерації сторінок
-  skip_first_page: boolean; // Чи пропускати першу сторінку для всіх перевірок
+  check_numbering: boolean; // Чи перевіряти нумерацію сторінок
+  start_from_number: number; // З якого номера починати нумерацію
+  skip_first_page: boolean; // Чи пропускати першу сторінку (перша сторінка без номера)
 }
 
 export interface TemplateCreate {
@@ -104,4 +100,29 @@ export interface CheckResult {
   issues: Issue[];
   processing_time_ms: number;
   created_at: string;
+}
+
+// Request body for formatting a document
+export interface FormatDocumentRequest {
+  template_id?: number;
+  custom_params?: TemplateParams;
+  font_family?: string;
+}
+
+// Format change applied to document
+export interface FormatChange {
+  type: string;
+  description: string;
+  before?: string | null;
+  after?: string | null;
+}
+
+// Result of format operation
+export interface FormatResult {
+  success: boolean;
+  changes_applied: number;
+  changes: FormatChange[];
+  processing_time_ms: number;
+  document_title?: string | null;
+  error_message?: string | null;
 }
