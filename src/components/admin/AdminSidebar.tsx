@@ -1,21 +1,28 @@
+"use client";
+
 import Link from "next/link";
-import {
-  Users,
-  FileText,
-  Layout,
-  Type,
-  BarChart3,
-  Settings,
-} from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Users, FileText, Layout, Type, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { ActiveTab } from "@/types/admin";
 
-interface AdminSidebarProps {
-  activeTab: ActiveTab;
-  onTabChange: (tab: ActiveTab) => void;
-}
+const navItems = [
+  { href: "/admin", label: "Analytics", icon: BarChart3 },
+  { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/logs", label: "Activity Logs", icon: FileText },
+  { href: "/admin/templates", label: "Templates", icon: Layout },
+  { href: "/admin/fonts", label: "Fonts", icon: Type },
+];
 
-export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+export function AdminSidebar() {
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/admin") {
+      return pathname === "/admin";
+    }
+    return pathname.startsWith(href);
+  };
+
   return (
     <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col">
       <div className="h-16 flex items-center px-6 border-b border-slate-800">
@@ -24,73 +31,24 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
         </span>
       </div>
       <nav className="flex-1 p-4 space-y-2">
-        <Button
-          variant="ghost"
-          className={`w-full justify-start ${
-            activeTab === "users"
-              ? "bg-slate-800 text-white"
-              : "text-slate-300 hover:text-white hover:bg-slate-800"
-          }`}
-          onClick={() => onTabChange("users")}
-        >
-          <Users className="mr-3 h-5 w-5" />
-          Users
-        </Button>
-        <Button
-          variant="ghost"
-          className={`w-full justify-start ${
-            activeTab === "logs"
-              ? "bg-slate-800 text-white"
-              : "text-slate-300 hover:text-white hover:bg-slate-800"
-          }`}
-          onClick={() => onTabChange("logs")}
-        >
-          <FileText className="mr-3 h-5 w-5" />
-          Activity Logs
-        </Button>
-        <Button
-          variant="ghost"
-          className={`w-full justify-start ${
-            activeTab === "templates"
-              ? "bg-slate-800 text-white"
-              : "text-slate-300 hover:text-white hover:bg-slate-800"
-          }`}
-          onClick={() => onTabChange("templates")}
-        >
-          <Layout className="mr-3 h-5 w-5" />
-          Templates
-        </Button>
-        <Button
-          variant="ghost"
-          className={`w-full justify-start ${
-            activeTab === "fonts"
-              ? "bg-slate-800 text-white"
-              : "text-slate-300 hover:text-white hover:bg-slate-800"
-          }`}
-          onClick={() => onTabChange("fonts")}
-        >
-          <Type className="mr-3 h-5 w-5" />
-          Fonts
-        </Button>
-        <Button
-          variant="ghost"
-          className={`w-full justify-start ${
-            activeTab === "analytics"
-              ? "bg-slate-800 text-white"
-              : "text-slate-300 hover:text-white hover:bg-slate-800"
-          }`}
-          onClick={() => onTabChange("analytics")}
-        >
-          <BarChart3 className="mr-3 h-5 w-5" />
-          Analytics
-        </Button>
-        <Button
-          variant="ghost"
-          className="w-full justify-start text-slate-300 hover:text-white hover:bg-slate-800"
-        >
-          <Settings className="mr-3 h-5 w-5" />
-          Settings
-        </Button>
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link key={item.href} href={item.href}>
+              <Button
+                variant="ghost"
+                className={`w-full justify-start ${
+                  isActive(item.href)
+                    ? "bg-slate-800 text-white"
+                    : "text-slate-300 hover:text-white hover:bg-slate-800"
+                }`}
+              >
+                <Icon className="mr-3 h-5 w-5" />
+                {item.label}
+              </Button>
+            </Link>
+          );
+        })}
       </nav>
       <div className="p-4 border-t border-slate-800">
         <Link href="/app">
