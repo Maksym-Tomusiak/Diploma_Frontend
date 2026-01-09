@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDateTime } from "@/lib/formatters";
+import { formatShortDateTime } from "@/lib/formatters";
 
 interface UserAction {
   id: number;
@@ -67,7 +67,7 @@ export function RecentBansTable({ actions }: RecentBansTableProps) {
                   key={action.id}
                   className="border-slate-100 hover:bg-slate-50"
                 >
-                  <TableCell className="font-medium text-slate-900">
+                  <TableCell className="font-medium text-slate-900 max-w-[200px] truncate">
                     {action.user_email}
                   </TableCell>
                   <TableCell>
@@ -83,10 +83,10 @@ export function RecentBansTable({ actions }: RecentBansTableProps) {
                         : "Unbanned"}
                     </span>
                   </TableCell>
-                  <TableCell className="text-sm text-slate-600">
-                    {formatDateTime(action.timestamp)}
+                  <TableCell className="text-sm text-slate-600 min-w-[90px]">
+                    {formatShortDateTime(action.timestamp)}
                   </TableCell>
-                  <TableCell className="text-sm text-slate-600">
+                  <TableCell className="text-sm text-slate-600 max-w-[150px] truncate">
                     {action.details?.reason || "No reason provided"}
                   </TableCell>
                 </TableRow>

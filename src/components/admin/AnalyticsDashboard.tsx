@@ -82,7 +82,7 @@ export function AnalyticsDashboard() {
   return (
     <div className="flex flex-col gap-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         <StatCard
           title="Document Checks"
           value={totalChecks}
@@ -114,7 +114,7 @@ export function AnalyticsDashboard() {
       </div>
 
       {/* Charts Grid */}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         <DocumentProcessingChart data={data.document_processing} />
         <UserRegistrationChart data={data.user_registrations} />
         <RecentUsersTable users={data.recent_users} />

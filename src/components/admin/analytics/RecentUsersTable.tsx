@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDateTime } from "@/lib/formatters";
+import { formatShortDateTime } from "@/lib/formatters";
 
 interface RecentUser {
   id: number;
@@ -67,7 +67,7 @@ export function RecentUsersTable({ users }: RecentUsersTableProps) {
                   </span>
                 </TableCell>
                 <TableCell className="text-sm text-slate-600">
-                  {formatDateTime(user.created_at)}
+                  {formatShortDateTime(user.created_at)}
                 </TableCell>
               </TableRow>
             ))}
