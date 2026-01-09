@@ -38,10 +38,10 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex font-sans">
+    <div className="min-h-screen bg-slate-50 font-sans">
       <AdminSidebar />
 
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex flex-col min-h-screen ml-64">
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-end px-8">
           <div className="flex items-center gap-4">
             <Avatar>
