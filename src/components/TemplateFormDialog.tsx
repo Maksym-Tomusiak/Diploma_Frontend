@@ -241,7 +241,7 @@ export function TemplateFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-sm:w-[90%] max-w-2xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>
             {template ? "Edit Template" : "Create New Template"}
@@ -253,7 +253,10 @@ export function TemplateFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6 overflow-y-auto overflow-x-visible pr-2 pl-1 pb-1 flex-1"
+        >
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-sm font-semibold text-slate-900">

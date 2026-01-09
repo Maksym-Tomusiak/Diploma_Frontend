@@ -3,7 +3,6 @@
 import {
   Plus,
   Edit,
-  Trash2,
   MoreHorizontal,
   Type,
   Loader2,
@@ -77,7 +76,7 @@ export function FontsTable({
 
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap gap-[12px] items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-slate-900">
           Available Fonts
         </h2>
@@ -243,13 +242,13 @@ export function FontsTable({
               </div>
               <div className="space-y-2">
                 <Label>Variants</Label>
-                <div className="max-h-32 overflow-y-auto border rounded-md p-2 text-sm">
+                <div className="max-h-32 overflow-y-auto border rounded-md p-2 pr-4 text-sm">
                   {selectedFont.variants?.split(",").join(", ") || "N/A"}
                 </div>
               </div>
               <div className="space-y-2">
                 <Label>Subsets</Label>
-                <div className="max-h-32 overflow-y-auto border rounded-md p-2 text-sm">
+                <div className="max-h-32 overflow-y-auto border rounded-md p-2 pr-4 text-sm">
                   {selectedFont.subsets?.split(",").join(", ") || "N/A"}
                 </div>
               </div>

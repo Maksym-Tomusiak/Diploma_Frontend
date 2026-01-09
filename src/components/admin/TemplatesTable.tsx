@@ -55,13 +55,13 @@ export function TemplatesTable({
 }: TemplatesTableProps) {
   return (
     <>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap gap-[24px] sm:items-center justify-between mb-6">
         <h2 className="text-lg font-semibold text-slate-900">
           Document Templates
         </h2>
         <Button
           onClick={onCreateTemplate}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 max-w-fit"
         >
           <Plus className="mr-2 h-4 w-4" />
           Create Template
@@ -126,7 +126,7 @@ export function TemplatesTable({
                   <TableCell className="font-medium text-slate-900">
                     {template.name}
                   </TableCell>
-                  <TableCell className="text-slate-600 text-sm max-w-md truncate">
+                  <TableCell className="text-slate-600 text-sm max-w-[150px] md:max-w-[200px] truncate">
                     {template.description}
                   </TableCell>
                   <TableCell className="text-slate-600 text-sm">

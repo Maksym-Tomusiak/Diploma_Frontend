@@ -31,7 +31,7 @@ export function UserLogsModal({
 }: UserLogsModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-sm:w-[90%] max-w-3xl max-h-[80vh] flex flex-col sm:mx-auto">
         <DialogHeader>
           <DialogTitle>Activity Logs - {user?.email}</DialogTitle>
           <DialogDescription>
@@ -40,7 +40,7 @@ export function UserLogsModal({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-3">
+        <div className="space-y-3 overflow-y-auto flex-1 pr-2 pb-1">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-slate-600" />
