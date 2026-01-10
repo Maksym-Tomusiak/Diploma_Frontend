@@ -212,16 +212,16 @@ export function UsersTable({
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow className="border-b border-slate-200 hover:bg-slate-50">
-                <TableHead className="w-[300px] font-semibold text-slate-700">
+                <TableHead className="w-[35%] font-semibold text-slate-700">
                   Email
                 </TableHead>
-                <TableHead className="font-semibold text-slate-700">
+                <TableHead className="w-[15%] font-semibold text-slate-700">
                   Role
                 </TableHead>
-                <TableHead className="font-semibold text-slate-700">
+                <TableHead className="w-[25%] font-semibold text-slate-700">
                   Joined
                 </TableHead>
-                <TableHead className="text-right font-semibold text-slate-700">
+                <TableHead className="w-[25%] text-right font-semibold text-slate-700">
                   Actions
                 </TableHead>
               </TableRow>

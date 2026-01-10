@@ -97,22 +97,22 @@ export function TemplatesTable({
           <Table>
             <TableHeader className="bg-slate-50">
               <TableRow className="border-b border-slate-200 hover:bg-slate-50">
-                <TableHead className="w-[200px] font-semibold text-slate-700">
+                <TableHead className="w-[18%] font-semibold text-slate-700">
                   Name
                 </TableHead>
-                <TableHead className="font-semibold text-slate-700">
+                <TableHead className="w-[25%] font-semibold text-slate-700">
                   Description
                 </TableHead>
-                <TableHead className="w-[150px] font-semibold text-slate-700">
+                <TableHead className="w-[15%] font-semibold text-slate-700">
                   Font
                 </TableHead>
-                <TableHead className="w-[100px] font-semibold text-slate-700">
+                <TableHead className="w-[12%] font-semibold text-slate-700">
                   Status
                 </TableHead>
-                <TableHead className="w-[150px] font-semibold text-slate-700">
+                <TableHead className="w-[15%] font-semibold text-slate-700">
                   Created
                 </TableHead>
-                <TableHead className="text-right font-semibold text-slate-700">
+                <TableHead className="w-[15%] text-right font-semibold text-slate-700">
                   Actions
                 </TableHead>
               </TableRow>

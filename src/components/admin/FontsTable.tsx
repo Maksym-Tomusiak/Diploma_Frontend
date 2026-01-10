@@ -142,19 +142,19 @@ export function FontsTable({
             <Table>
               <TableHeader className="bg-slate-50">
                 <TableRow className="border-b border-slate-200 hover:bg-slate-50">
-                  <TableHead className="w-[250px] font-semibold text-slate-700">
+                  <TableHead className="w-[30%] font-semibold text-slate-700">
                     Font Family
                   </TableHead>
-                  <TableHead className="w-[120px] font-semibold text-slate-700">
+                  <TableHead className="w-[18%] font-semibold text-slate-700">
                     Category
                   </TableHead>
-                  <TableHead className="w-[100px] font-semibold text-slate-700">
+                  <TableHead className="w-[15%] font-semibold text-slate-700">
                     Variants
                   </TableHead>
-                  <TableHead className="w-[150px] font-semibold text-slate-700">
+                  <TableHead className="w-[22%] font-semibold text-slate-700">
                     Added Date
                   </TableHead>
-                  <TableHead className="w-[80px] text-right font-semibold text-slate-700">
+                  <TableHead className="w-[15%] text-right font-semibold text-slate-700">
                     Actions
                   </TableHead>
                 </TableRow>

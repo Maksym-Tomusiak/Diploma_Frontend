@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FileText, Loader2, AlertCircle } from "lucide-react";
+import { FileText, Loader2, AlertCircle, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -162,20 +169,23 @@ export function LogsTable({
             <Table>
               <TableHeader className="bg-slate-50">
                 <TableRow className="border-b border-slate-200 hover:bg-slate-50">
-                  <TableHead className="w-[80px] font-semibold text-slate-700">
+                  <TableHead className="w-[8%] font-semibold text-slate-700">
                     ID
                   </TableHead>
-                  <TableHead className="w-[200px] font-semibold text-slate-700">
+                  <TableHead className="w-[18%] font-semibold text-slate-700">
                     User
                   </TableHead>
-                  <TableHead className="w-[150px] font-semibold text-slate-700">
+                  <TableHead className="w-[15%] font-semibold text-slate-700">
                     Action
                   </TableHead>
-                  <TableHead className="font-semibold text-slate-700">
+                  <TableHead className="w-[32%] font-semibold text-slate-700">
                     Details
                   </TableHead>
-                  <TableHead className="w-[180px] font-semibold text-slate-700">
+                  <TableHead className="w-[17%] font-semibold text-slate-700">
                     Timestamp
+                  </TableHead>
+                  <TableHead className="w-[10%] text-right font-semibold text-slate-700">
+                    Actions
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -183,8 +193,7 @@ export function LogsTable({
                 {logs.map((log) => (
                   <TableRow
                     key={log.id}
-                    className="hover:bg-slate-50 border-b border-slate-100 last:border-0 transition-colors cursor-pointer"
-                    onClick={() => handleRowClick(log)}
+                    className="hover:bg-slate-50 border-b border-slate-100 last:border-0 transition-colors"
                   >
                     <TableCell className="text-slate-500 text-sm">
                       {log.id}
@@ -218,6 +227,26 @@ export function LogsTable({
                     </TableCell>
                     <TableCell className="text-slate-500 text-sm">
                       {formatDateTime(log.created_at)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                          >
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuItem onClick={() => handleRowClick(log)}>
+                            <FileText className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}
