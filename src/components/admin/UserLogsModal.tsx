@@ -29,6 +29,13 @@ export function UserLogsModal({
   isLoading,
   onViewAllLogs,
 }: UserLogsModalProps) {
+  const renderDetailValue = (value: any): string => {
+    if (value === null || value === undefined) return "—";
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (typeof value === "object") return JSON.stringify(value, null, 2);
+    return String(value);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-sm:w-[90%] max-w-3xl max-h-[80vh] flex flex-col sm:mx-auto">
@@ -70,15 +77,18 @@ export function UserLogsModal({
                         {formatDateTime(log.created_at)}
                       </span>
                     </div>
-                    {log.details && (
-                      <div className="text-sm text-slate-600">
-                        {typeof log.details === "string" ? (
-                          <span>{log.details}</span>
-                        ) : (
-                          <pre className="text-xs bg-slate-100 px-2 py-2 rounded block overflow-auto whitespace-pre-wrap">
-                            {JSON.stringify(log.details, null, 2)}
-                          </pre>
-                        )}
+                    {log.details && Object.keys(log.details).length > 0 && (
+                      <div className="bg-slate-50 rounded-lg p-3 space-y-2">
+                        {Object.entries(log.details).map(([key, value]) => (
+                          <div key={key} className="flex flex-col gap-1">
+                            <span className="text-xs font-medium text-slate-600 uppercase">
+                              {key.replace(/_/g, " ")}
+                            </span>
+                            <span className="text-sm text-slate-900 break-words">
+                              {renderDetailValue(value)}
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </div>

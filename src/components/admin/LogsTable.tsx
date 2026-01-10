@@ -1,7 +1,15 @@
+import { useState } from "react";
 import { FileText, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -60,11 +68,26 @@ export function LogsTable({
   handleClearLogsFilter,
   users,
 }: LogsTableProps) {
+  const [selectedLog, setSelectedLog] = useState<UserActionLog | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleRowClick = (log: UserActionLog) => {
+    setSelectedLog(log);
+    setModalOpen(true);
+  };
+
+  const renderDetailValue = (value: any): string => {
+    if (value === null || value === undefined) return "—";
+    if (typeof value === "boolean") return value ? "Yes" : "No";
+    if (typeof value === "object") return JSON.stringify(value, null, 2);
+    return String(value);
+  };
+
   return (
     <>
       <div className="flex items-center gap-4 mb-6">
         <Select
-          value={logsFilterUserId?.toString() || ""}
+          value={logsFilterUserId || "__ALL__"}
           onValueChange={(value: string) => {
             setLogsFilterUserId(value === "__ALL__" ? null : value);
           }}
@@ -75,7 +98,7 @@ export function LogsTable({
           <SelectContent>
             <SelectItem value="__ALL__">All users</SelectItem>
             {users.map((user) => (
-              <SelectItem key={user.id} value={user.id.toString()}>
+              <SelectItem key={user.id} value={user.id}>
                 {user.email}
               </SelectItem>
             ))}
@@ -160,7 +183,8 @@ export function LogsTable({
                 {logs.map((log) => (
                   <TableRow
                     key={log.id}
-                    className="hover:bg-slate-50 border-b border-slate-100 last:border-0 transition-colors"
+                    className="hover:bg-slate-50 border-b border-slate-100 last:border-0 transition-colors cursor-pointer"
+                    onClick={() => handleRowClick(log)}
                   >
                     <TableCell className="text-slate-500 text-sm">
                       {log.id}
@@ -209,6 +233,86 @@ export function LogsTable({
         onPageChange={onPageChange}
         className="mt-4"
       />
+
+      {/* Log Details Modal */}
+      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col mx-4 sm:mx-auto">
+          <DialogHeader>
+            <DialogTitle>Activity Log Details</DialogTitle>
+            <DialogDescription>
+              Complete information about this activity log
+            </DialogDescription>
+          </DialogHeader>
+          {selectedLog && (
+            <div className="space-y-4 overflow-y-auto pr-2 flex-1">
+              <div className="flex flex-wrap gap-4">
+                <div className="flex-1 min-w-[200px]">
+                  <label className="text-sm font-semibold text-slate-700">
+                    Log ID
+                  </label>
+                  <p className="text-sm text-slate-900 mt-1">
+                    {selectedLog.id}
+                  </p>
+                </div>
+                <div className="flex-1 min-w-[200px]">
+                  <label className="text-sm font-semibold text-slate-700">
+                    User
+                  </label>
+                  <p className="text-sm text-slate-900 mt-1 break-words">
+                    {selectedLog.user_email || `User ${selectedLog.user_id}`}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-4">
+                <div className="flex-1 min-w-[200px]">
+                  <label className="text-sm font-semibold text-slate-700">
+                    Action Type
+                  </label>
+                  <div className="mt-1">
+                    <Badge
+                      className={`${getActionBadgeColor(
+                        selectedLog.action_type
+                      )} border-transparent`}
+                    >
+                      {selectedLog.action_type.replace(/_/g, " ")}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="flex-1 min-w-[200px]">
+                  <label className="text-sm font-semibold text-slate-700">
+                    Timestamp
+                  </label>
+                  <p className="text-sm text-slate-900 mt-1">
+                    {formatDateTime(selectedLog.created_at)}
+                  </p>
+                </div>
+              </div>
+              {selectedLog.details &&
+                Object.keys(selectedLog.details).length > 0 && (
+                  <div className="w-full">
+                    <label className="text-sm font-semibold text-slate-700 mb-2 block">
+                      Details
+                    </label>
+                    <div className="bg-slate-50 rounded-lg p-4 space-y-3">
+                      {Object.entries(selectedLog.details).map(
+                        ([key, value]) => (
+                          <div key={key} className="flex flex-col gap-1">
+                            <span className="text-xs font-medium text-slate-600 uppercase">
+                              {key.replace(/_/g, " ")}
+                            </span>
+                            <span className="text-sm text-slate-900 break-words">
+                              {renderDetailValue(value)}
+                            </span>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

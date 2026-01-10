@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { UserRole } from "@/types/auth";
 import { LogsTable } from "@/components/admin/LogsTable";
@@ -9,19 +9,47 @@ import { useLogsManagement } from "@/hooks/useLogsManagement";
 
 export default function LogsPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { user: currentUser, isLoading: authLoading } = useAuth();
 
   const isAdmin = currentUser?.role === UserRole.ADMIN;
-  const logsData = useLogsManagement(isAdmin, authLoading, "logs");
 
-  // Handle user_id from URL query params
+  // Get initial values from URL
+  const initialUserId = searchParams.get("user_id");
+  const initialActionType = searchParams.get("action_type");
+
+  const logsData = useLogsManagement(
+    isAdmin,
+    authLoading,
+    "logs",
+    initialUserId,
+    initialActionType
+  );
+
+  // Update URL when filters change
   useEffect(() => {
-    const userId = searchParams.get("user_id");
-    if (userId) {
-      logsData.setLogsFilterUserId(userId);
-      logsData.setCurrentPage(1);
+    const params = new URLSearchParams();
+
+    if (logsData.logsFilterUserId) {
+      params.set("user_id", logsData.logsFilterUserId);
     }
-  }, [searchParams]);
+
+    if (
+      logsData.logsFilterActionType &&
+      logsData.logsFilterActionType !== "all"
+    ) {
+      params.set("action_type", logsData.logsFilterActionType);
+    }
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `/admin/logs?${queryString}` : "/admin/logs";
+
+    // Only update if URL actually changed
+    const currentUrl = `/admin/logs${window.location.search}`;
+    if (currentUrl !== newUrl) {
+      router.replace(newUrl, { scroll: false });
+    }
+  }, [logsData.logsFilterUserId, logsData.logsFilterActionType, router]);
 
   return (
     <>
@@ -42,7 +70,7 @@ export default function LogsPage() {
         logsFilterActionType={logsData.logsFilterActionType}
         setLogsFilterActionType={logsData.setLogsFilterActionType}
         handleClearLogsFilter={logsData.handleClearLogsFilter}
-        users={[]}
+        users={logsData.users}
       />
     </>
   );

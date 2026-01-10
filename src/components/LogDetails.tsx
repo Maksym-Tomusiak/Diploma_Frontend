@@ -4,9 +4,10 @@
 
 interface LogDetailsProps {
   details: any;
+  maxProps?: number;
 }
 
-export function LogDetails({ details }: LogDetailsProps) {
+export function LogDetails({ details, maxProps = 1 }: LogDetailsProps) {
   if (!details) {
     return <span className="text-slate-400">—</span>;
   }
@@ -15,7 +16,7 @@ export function LogDetails({ details }: LogDetailsProps) {
     return <span className="text-slate-700 text-sm">{details}</span>;
   }
 
-  // If it's an object, render key/value pairs (first 4 keys) prettily
+  // If it's an object, render key/value pairs (first maxProps keys) prettily
   try {
     const entries = Object.entries(details);
     if (entries.length === 0) {
@@ -24,19 +25,19 @@ export function LogDetails({ details }: LogDetailsProps) {
 
     return (
       <div className="text-sm text-slate-700 space-y-1">
-        {entries.slice(0, 4).map(([k, v]) => (
+        {entries.slice(0, maxProps).map(([k, v]) => (
           <div key={k} className="flex items-start gap-2">
-            <span className="font-mono text-xs text-slate-500 w-[120px]">
+            <span className="font-mono text-xs text-slate-500 min-w-[100px]">
               {k}:
             </span>
-            <span className="break-words">
+            <span className="break-words truncate max-w-[200px]">
               {typeof v === "object" ? JSON.stringify(v) : String(v)}
             </span>
           </div>
         ))}
-        {entries.length > 4 && (
+        {entries.length > maxProps && (
           <div className="text-xs text-slate-500">
-            and {entries.length - 4} more...
+            +{entries.length - maxProps} more
           </div>
         )}
       </div>
