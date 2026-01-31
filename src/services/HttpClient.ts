@@ -18,7 +18,6 @@ export class HttpClient {
       baseURL: config.baseURL,
       withCredentials: config.withCredentials,
       headers: {
-        "Content-Type": "application/json",
         Accept: "application/json",
         ...config.headers,
       },
@@ -27,40 +26,48 @@ export class HttpClient {
     this.initInterceptors();
   }
 
-  async get<T = any>(url: string, signal?: AbortSignal): Promise<T> {
-    return this.request<T>({ method: "GET", url, signal });
+  async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.request<T>({ method: "GET", url, ...config });
   }
 
   async post<T = any>(
     url: string,
     data?: any,
-    signal?: AbortSignal
+    config?: AxiosRequestConfig
   ): Promise<T> {
-    return this.request<T>({ method: "POST", url, data, signal });
+    return this.request<T>({ method: "POST", url, data, ...config });
   }
 
   async put<T = any>(
     url: string,
     data?: any,
-    signal?: AbortSignal
+    config?: AxiosRequestConfig
   ): Promise<T> {
-    return this.request<T>({ method: "PUT", url, data, signal });
+    return this.request<T>({ method: "PUT", url, data, ...config });
   }
 
   async patch<T = any>(
     url: string,
     data?: any,
-    signal?: AbortSignal
+    config?: AxiosRequestConfig
   ): Promise<T> {
-    return this.request<T>({ method: "PATCH", url, data, signal });
+    return this.request<T>({ method: "PATCH", url, data, ...config });
   }
 
-  async delete<T = any>(url: string, signal?: AbortSignal): Promise<T> {
-    return this.request<T>({ method: "DELETE", url, signal });
+  async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+    return this.request<T>({ method: "DELETE", url, ...config });
   }
 
   private async request<T = any>(config: AxiosRequestConfig): Promise<T> {
     try {
+      // Set Content-Type to application/json for non-FormData requests
+      if (config.data && !(config.data instanceof FormData)) {
+        config.headers = {
+          "Content-Type": "application/json",
+          ...config.headers,
+        };
+      }
+
       const response: AxiosResponse<T> = await this.axiosInstance.request<T>(
         config
       );

@@ -4,6 +4,7 @@ import { checkResultService } from "@/services/CheckResultService";
 import type {
   Document,
   CheckResult,
+  UploadCheckResult,
   CheckDocumentRequest,
   FormatDocumentRequest,
   FormatResult,
@@ -15,13 +16,15 @@ export function useDocumentWorkflow() {
   const [currentDocument, setCurrentDocument] = useState<Document | null>(null);
   const [status, setStatus] = useState<WorkflowStatus>("idle");
   const [logs, setLogs] = useState<string[]>([]);
-  const [checkResult, setCheckResult] = useState<CheckResult | null>(null);
+  const [checkResult, setCheckResult] = useState<
+    CheckResult | UploadCheckResult | null
+  >(null);
   const [formatResult, setFormatResult] = useState<FormatResult | null>(null);
 
   const createDocument = async (
     googleDocId: string,
     templateId: number,
-    title?: string
+    title?: string,
   ) => {
     if (!googleDocId || !templateId) {
       setLogs((prev) => [
@@ -57,7 +60,7 @@ export function useDocumentWorkflow() {
 
   const startCheck = async (
     checkRequest: CheckDocumentRequest,
-    documentToCheck?: Document
+    documentToCheck?: Document,
   ) => {
     const docToUse = documentToCheck || currentDocument;
 
@@ -73,7 +76,7 @@ export function useDocumentWorkflow() {
       // Trigger check with template or custom params - returns the new result directly
       const newCheckResult = await documentService.checkDocument(
         docToUse.id,
-        checkRequest
+        checkRequest,
       );
 
       // Simulate progress steps
@@ -121,7 +124,7 @@ export function useDocumentWorkflow() {
     try {
       const result = await documentService.formatDocument(
         currentDocument.id,
-        formatRequest
+        formatRequest,
       );
 
       // Show progress steps
@@ -170,9 +173,11 @@ export function useDocumentWorkflow() {
     currentDocument,
     setCurrentDocument,
     status,
+    setStatus,
     logs,
     setLogs,
     checkResult,
+    setCheckResult,
     formatResult,
     createDocument,
     startCheck,

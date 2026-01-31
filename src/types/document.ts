@@ -102,6 +102,17 @@ export interface CheckResult {
   created_at: string;
 }
 
+// Result for uploaded file checks (no database IDs)
+export interface UploadCheckResult {
+  passed: boolean;
+  overall_score: number | null;
+  issues_count: number;
+  issues: Issue[];
+  processing_time_ms: number;
+  document_title?: string | null;
+  remaining_anonymous_checks?: number; // Only present for anonymous users
+}
+
 // Request body for formatting a document
 export interface FormatDocumentRequest {
   template_id?: number;

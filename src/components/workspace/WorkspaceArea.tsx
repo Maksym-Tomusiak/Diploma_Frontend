@@ -11,14 +11,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import type { CheckResult, Document, FormatResult } from "@/types/document";
+import type {
+  CheckResult,
+  UploadCheckResult,
+  Document,
+  FormatResult,
+} from "@/types/document";
 import type { WorkflowStatus } from "@/types/workspace";
 
 interface WorkspaceAreaProps {
   currentDocument: Document | null;
+  selectedFile: File | null;
+  documentMode: "google" | "upload";
   status: WorkflowStatus;
   logs: string[];
-  checkResult: CheckResult | null;
+  checkResult: CheckResult | UploadCheckResult | null;
   formatResult: FormatResult | null;
   googleDocId: string;
   selectedTemplate: number | null;
@@ -29,6 +36,8 @@ interface WorkspaceAreaProps {
 
 export function WorkspaceArea({
   currentDocument,
+  selectedFile,
+  documentMode,
   status,
   logs,
   checkResult,
@@ -51,7 +60,8 @@ export function WorkspaceArea({
             variant="outline"
             className="border-blue-200 text-blue-700 hover:bg-blue-50"
             disabled={
-              !googleDocId ||
+              (documentMode === "google" && !googleDocId) ||
+              (documentMode === "upload" && !selectedFile) ||
               (!selectedTemplate && !isCustomMode) ||
               status === "checking" ||
               status === "formatting"
@@ -67,7 +77,13 @@ export function WorkspaceArea({
           </Button>
           <Button
             className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
-            disabled={status !== "checked" && status !== "complete"}
+            disabled={
+              (documentMode === "google" &&
+                status !== "checked" &&
+                status !== "complete") ||
+              (documentMode === "upload" && !selectedFile) ||
+              (documentMode === "upload" && !selectedTemplate && !isCustomMode)
+            }
             onClick={onFormat}
           >
             <Play className="mr-2 h-4 w-4 fill-current" />
@@ -80,7 +96,7 @@ export function WorkspaceArea({
       <div className="flex-1 p-8 overflow-hidden flex flex-col">
         <div className="flex-1 bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden flex flex-col relative">
           {/* Empty State */}
-          {!currentDocument && status === "idle" && (
+          {!currentDocument && !selectedFile && status === "idle" && (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
               <div className="h-20 w-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
                 <FileText className="h-10 w-10 text-slate-300" />
@@ -89,8 +105,8 @@ export function WorkspaceArea({
                 No document selected
               </h3>
               <p className="text-slate-500 max-w-sm">
-                Please provide a Google Doc ID and select a template from the
-                sidebar to begin formatting.
+                Please select a Google Doc or upload a .docx file, and select a
+                template from the sidebar to begin formatting.
               </p>
             </div>
           )}
@@ -185,8 +201,8 @@ export function WorkspaceArea({
                                           issue.severity === "high"
                                             ? "border-red-300 text-red-700 bg-red-50"
                                             : issue.severity === "medium"
-                                            ? "border-amber-300 text-amber-700 bg-amber-50"
-                                            : "border-slate-300 text-slate-700 bg-slate-50"
+                                              ? "border-amber-300 text-amber-700 bg-amber-50"
+                                              : "border-slate-300 text-slate-700 bg-slate-50"
                                         }
                                       >
                                         {issue.severity}

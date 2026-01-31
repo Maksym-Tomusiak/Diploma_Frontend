@@ -4,6 +4,7 @@ import type {
   DocumentCreate,
   CheckDocumentRequest,
   CheckResult,
+  UploadCheckResult,
   FormatDocumentRequest,
   FormatResult,
 } from "@/types/document";
@@ -29,7 +30,7 @@ class DocumentService {
   async getDocumentByGoogleId(googleDocId: string): Promise<Document | null> {
     try {
       return await httpClient.get<Document>(
-        `/v1/documents/by-google-id/${googleDocId}`
+        `/v1/documents/by-google-id/${googleDocId}`,
       );
     } catch (error: any) {
       if (error?.response?.status === 404) {
@@ -58,11 +59,11 @@ class DocumentService {
    */
   async checkDocument(
     documentId: string,
-    data: CheckDocumentRequest
+    data: CheckDocumentRequest,
   ): Promise<CheckResult> {
     return httpClient.post<CheckResult>(
       `/v1/documents/${documentId}/check`,
-      data
+      data,
     );
   }
 
@@ -71,12 +72,76 @@ class DocumentService {
    */
   async formatDocument(
     documentId: string,
-    data: FormatDocumentRequest
+    data: FormatDocumentRequest,
   ): Promise<FormatResult> {
     return httpClient.post<FormatResult>(
       `/v1/documents/${documentId}/format`,
-      data
+      data,
     );
+  }
+
+  /**
+   * Check an uploaded file's formatting
+   */
+  async checkUploadedFile(
+    file: File,
+    templateId?: number,
+    customParams?: any,
+    fontFamily?: string,
+  ): Promise<UploadCheckResult> {
+    const formData = new FormData();
+    formData.append("file", file, file.name);
+
+    if (templateId) {
+      formData.append("template_id", templateId.toString());
+    }
+
+    if (customParams) {
+      formData.append("custom_params", JSON.stringify(customParams));
+    }
+
+    if (fontFamily) {
+      formData.append("font_family", fontFamily);
+    }
+
+    return httpClient.post<UploadCheckResult>(
+      "/v1/documents/upload/check",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+  }
+
+  /**
+   * Format an uploaded file and download the result
+   */
+  async formatUploadedFile(
+    file: File,
+    templateId?: number,
+    customParams?: any,
+    fontFamily?: string,
+  ): Promise<Blob> {
+    const formData = new FormData();
+    formData.append("file", file, file.name);
+
+    if (templateId) {
+      formData.append("template_id", templateId.toString());
+    }
+
+    if (customParams) {
+      formData.append("custom_params", JSON.stringify(customParams));
+    }
+
+    if (fontFamily) {
+      formData.append("font_family", fontFamily);
+    }
+
+    return httpClient.post<Blob>("/v1/documents/upload/format", formData, {
+      responseType: "blob",
+    });
   }
 }
 

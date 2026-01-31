@@ -202,7 +202,7 @@ export default function Landing() {
                 control.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="#">
+                <Link href="/app">
                   <Button
                     size="lg"
                     className="bg-blue-600 hover:bg-blue-700 text-white h-12 px-8 text-base shadow-sm"
