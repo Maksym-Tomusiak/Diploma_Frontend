@@ -49,7 +49,7 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
       >
         <div className="h-16 flex items-center px-6 border-b border-slate-800">
           <span className="text-lg font-bold text-white tracking-tight">
-            FormatStand Admin
+            Norma Admin
           </span>
         </div>
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">

@@ -36,10 +36,10 @@ export default function RegisterPage() {
             <FileText className="h-6 w-6" />
           </div>
           <CardTitle className="text-2xl font-bold text-slate-900">
-            Create an account
+            Створити акаунт
           </CardTitle>
           <CardDescription className="text-slate-500">
-            Get started with automated formatting today
+            Почніть автоматичне форматування вже сьогодні
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -67,7 +67,7 @@ export default function RegisterPage() {
                 fill="#EA4335"
               />
             </svg>
-            {isLoading ? "Redirecting..." : "Continue with Google"}
+            {isLoading ? "Перенаправлення..." : "Продовжити з Google"}
           </Button>
 
           <div className="relative">
@@ -76,28 +76,27 @@ export default function RegisterPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white px-2 text-slate-500">
-                Secure authentication
+                Безпечна автентифікація
               </span>
             </div>
           </div>
 
           <div className="text-center text-sm text-slate-500">
-            Sign up securely with your Google account
+            Зареєструйтеся безпечно за допомогою свого облікового запису Google
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4 border-t border-slate-100 pt-6">
           <div className="text-center text-sm text-slate-500">
-            Already have an account?{" "}
+            Вже є акаунт?{" "}
             <Link
               href="/login"
               className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
             >
-              Log in
+              Увійти
             </Link>
           </div>
           <p className="text-center text-xs text-slate-400 px-4">
-            By clicking continue, you agree to our Terms of Service and Privacy
-            Policy.
+            Натискаючи &quot;Продовжити&quot;, ви погоджуєтеся з нашими Умовами використання та Політикою конфіденційності.
           </p>
         </CardFooter>
       </Card>

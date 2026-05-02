@@ -27,6 +27,8 @@ export default function FontsPage() {
         fontsError={fontsData.fontsError}
         onSeedFonts={fontsData.handleSeedFonts}
         onRefresh={fontsData.handleRefresh}
+        onCreateFont={fontsData.handleCreateFont}
+        onDeleteFont={fontsData.handleDeleteFont}
       />
     </>
   );

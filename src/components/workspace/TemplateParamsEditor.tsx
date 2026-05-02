@@ -26,7 +26,7 @@ interface TemplateParamsEditorProps {
   onMarginChange: (side: keyof PageMargins, value: number) => void;
   onPageNumberingChange: (
     key: "check_numbering" | "start_from_number" | "skip_first_page",
-    value: any
+    value: any,
   ) => void;
   onFontFamilyChange: (fontFamily: string) => void;
   onFontSearch: (query: string) => Promise<{ value: string; label: string }[]>;
@@ -47,18 +47,25 @@ export function TemplateParamsEditor({
   onFontSearch,
   onTemplateChange,
 }: TemplateParamsEditorProps) {
+  const marginLabels: Record<string, string> = {
+    top: "Верхнє",
+    bottom: "Нижнє",
+    left: "Ліве",
+    right: "Праве",
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <Label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-          Template Settings
+          Налаштування шаблону
         </Label>
         {isCustomMode && (
           <Badge
             variant="outline"
             className="text-xs text-orange-600 border-orange-300 bg-orange-50"
           >
-            Custom
+            Спеціальний
           </Badge>
         )}
       </div>
@@ -66,7 +73,7 @@ export function TemplateParamsEditor({
       {/* Template Selection */}
       <div className="space-y-2">
         <Label className="text-xs font-semibold text-slate-600">
-          Base Template
+          Базовий шаблон
         </Label>
         <Select
           value={isCustomMode ? "custom" : selectedTemplate?.toString()}
@@ -78,11 +85,11 @@ export function TemplateParamsEditor({
           disabled={loadingTemplates}
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select template" />
+            <SelectValue placeholder="Оберіть шаблон" />
           </SelectTrigger>
           <SelectContent>
             {isCustomMode && (
-              <SelectItem value="custom">Custom Settings</SelectItem>
+              <SelectItem value="custom">Спеціальні налаштування</SelectItem>
             )}
             {templates.map((template) => (
               <SelectItem key={template.id} value={template.id.toString()}>
@@ -95,28 +102,25 @@ export function TemplateParamsEditor({
 
       {/* Font Settings */}
       <div className="space-y-3">
-        <Label className="text-xs font-semibold text-slate-600">Font</Label>
+        <Label className="text-xs font-semibold text-slate-600">Шрифт</Label>
         <div className="space-y-2">
           <div className="space-y-1">
-            <Label className="text-xs text-slate-600">Family</Label>
+            <Label className="text-xs text-slate-600">Гарнітура</Label>
             <SearchCombobox
               value={selectedFontFamily || ""}
               onValueChange={(value) => onFontFamilyChange(value)}
               onSearch={onFontSearch}
-              placeholder="Select a font"
-              searchPlaceholder="Search fonts..."
-              emptyText="No fonts found."
+              placeholder="Оберіть шрифт"
+              searchPlaceholder="Пошук шрифтів..."
+              emptyText="Шрифтів не знайдено."
               selectedLabel={selectedFontFamily || ""}
             />
           </div>
           <div className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <Label htmlFor="font-size" className="text-slate-600">
-                Size (pt)
+                Розмір (пт)
               </Label>
-              <span className="font-mono text-slate-900">
-                {templateParams.font_size}
-              </span>
             </div>
             <Input
               id="font-size"
@@ -134,11 +138,8 @@ export function TemplateParamsEditor({
           <div className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <Label htmlFor="line-spacing" className="text-slate-600">
-                Line Spacing
+                Міжрядковий інтервал
               </Label>
-              <span className="font-mono text-slate-900">
-                {templateParams.line_spacing}
-              </span>
             </div>
             <Input
               id="line-spacing"
@@ -161,7 +162,7 @@ export function TemplateParamsEditor({
       {/* Margins */}
       <div className="space-y-3">
         <Label className="text-xs font-semibold text-slate-600">
-          Margins (mm)
+          Поля (мм)
         </Label>
         <div className="grid grid-cols-2 gap-2">
           {(["top", "bottom", "left", "right"] as const).map((side) => (
@@ -170,7 +171,7 @@ export function TemplateParamsEditor({
                 htmlFor={`margin-${side}`}
                 className="text-xs text-slate-600"
               >
-                {side.charAt(0).toUpperCase() + side.slice(1)}
+                {marginLabels[side]}
               </Label>
               <Input
                 id={`margin-${side}`}
@@ -193,12 +194,12 @@ export function TemplateParamsEditor({
       {/* Page Numbering */}
       <div className="space-y-3">
         <Label className="text-xs font-semibold text-slate-600">
-          Page Numbering
+          Нумерація сторінок
         </Label>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="page-numbering" className="text-sm text-slate-700">
-              Check page numbers
+              Перевіряти нумерацію
             </Label>
             <Checkbox
               id="page-numbering"
@@ -211,7 +212,7 @@ export function TemplateParamsEditor({
           {templateParams.check_numbering && (
             <div className="space-y-1">
               <Label htmlFor="start-number" className="text-xs text-slate-600">
-                Start from number
+                Починати з номера
               </Label>
               <Input
                 id="start-number"
@@ -221,7 +222,7 @@ export function TemplateParamsEditor({
                 onChange={(e) =>
                   onPageNumberingChange(
                     "start_from_number",
-                    parseInt(e.target.value)
+                    parseInt(e.target.value),
                   )
                 }
                 className="h-8"
@@ -230,7 +231,7 @@ export function TemplateParamsEditor({
           )}
           <div className="flex items-center justify-between">
             <Label htmlFor="skip-first" className="text-sm text-slate-700">
-              Skip first page
+              Пропустити першу сторінку
             </Label>
             <Checkbox
               id="skip-first"

@@ -9,7 +9,7 @@ export function useTemplateSettings(isAuthenticated: boolean) {
   const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [selectedFontFamily, setSelectedFontFamily] = useState<string | null>(
-    null
+    null,
   );
 
   const [templateParams, setTemplateParams] = useState<TemplateParams>({
@@ -26,7 +26,7 @@ export function useTemplateSettings(isAuthenticated: boolean) {
     skip_first_page: false,
   });
 
-  // Load templates
+  // Load templates (available for both authenticated and anonymous users)
   useEffect(() => {
     const loadTemplates = async () => {
       try {
@@ -45,10 +45,8 @@ export function useTemplateSettings(isAuthenticated: boolean) {
         setLoadingTemplates(false);
       }
     };
-    if (isAuthenticated) {
-      loadTemplates();
-    }
-  }, [isAuthenticated]);
+    loadTemplates();
+  }, []); // Remove isAuthenticated dependency
 
   // Update params when template changes
   useEffect(() => {
@@ -87,7 +85,7 @@ export function useTemplateSettings(isAuthenticated: boolean) {
 
   const handlePageNumberingChange = (
     key: "check_numbering" | "start_from_number" | "skip_first_page",
-    value: any
+    value: any,
   ) => {
     setIsCustomMode(true);
     setTemplateParams((prev) => ({

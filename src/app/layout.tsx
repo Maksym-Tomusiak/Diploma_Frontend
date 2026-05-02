@@ -15,8 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FormatStand - Academic Document Formatting",
+  title: "Norma - Academic Document Formatting",
   description: "Automatic formatting for academic papers with DSTU compliance",
+  icons: {
+    icon: "/favicon.png?v=1",
+  },
 };
 
 export default function RootLayout({

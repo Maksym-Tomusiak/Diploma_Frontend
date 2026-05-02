@@ -1,6 +1,6 @@
 "use client";
 
-import { Upload, FileText, X } from "lucide-react";
+import { Upload, FileText, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -21,6 +21,7 @@ interface DocumentSelectorProps {
   onSelectDocument: () => void;
   onClearDocument: () => void;
   onTemplateChange: (templateId: string) => void;
+  isPickerOpening?: boolean;
 }
 
 export function DocumentSelector({
@@ -33,21 +34,34 @@ export function DocumentSelector({
   onSelectDocument,
   onClearDocument,
   onTemplateChange,
+  isPickerOpening,
 }: DocumentSelectorProps) {
   if (!googleDocId) {
     return (
       <div
-        onClick={onSelectDocument}
-        className="border-2 border-dashed border-slate-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 hover:bg-blue-50/50 transition-all group"
+        onClick={!isPickerOpening ? onSelectDocument : undefined}
+        className={`border-2 border-dashed border-slate-300 rounded-lg p-6 flex flex-col items-center justify-center transition-all group ${
+          isPickerOpening 
+            ? "opacity-60 cursor-not-allowed bg-slate-50" 
+            : "cursor-pointer hover:border-blue-500 hover:bg-blue-50/50"
+        }`}
       >
-        <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center mb-3 group-hover:bg-blue-100 transition-colors">
-          <Upload className="h-5 w-5 text-slate-500 group-hover:text-blue-600" />
+        <div className={`h-10 w-10 rounded-full flex items-center justify-center mb-3 transition-colors ${
+          isPickerOpening ? "bg-slate-200" : "bg-slate-100 group-hover:bg-blue-100"
+        }`}>
+          {isPickerOpening ? (
+            <Loader2 className="h-5 w-5 text-slate-500 animate-spin" />
+          ) : (
+            <Upload className="h-5 w-5 text-slate-500 group-hover:text-blue-600" />
+          )}
         </div>
         <span className="text-sm font-medium text-slate-700">
-          Select from Google Drive
+          {isPickerOpening ? "Завантаження..." : "Обрати з Google Drive"}
         </span>
-        <span className="text-xs text-slate-500 mt-1">
-          Choose a Google Document
+        <span className="text-xs text-slate-500 mt-1 text-center">
+          {isPickerOpening 
+            ? "Будь ласка, зачекайте, поки відкриється вікно вибору" 
+            : "Оберіть документ Google"}
         </span>
       </div>
     );
@@ -61,7 +75,7 @@ export function DocumentSelector({
           <FileText className="h-5 w-5 text-slate-600 flex-shrink-0" />
           <div className="flex-1 overflow-hidden">
             <p className="text-sm font-medium text-slate-900 truncate">
-              {selectedDocName || "Selected Document"}
+              {selectedDocName || "Обраний документ"}
             </p>
           </div>
           <Button
@@ -86,11 +100,11 @@ export function DocumentSelector({
         disabled={loadingTemplates}
       >
         <SelectTrigger>
-          <SelectValue placeholder="Select template" />
+          <SelectValue placeholder="Оберіть шаблон" />
         </SelectTrigger>
         <SelectContent>
           {isCustomMode && (
-            <SelectItem value="custom">Custom Settings</SelectItem>
+            <SelectItem value="custom">Спеціальні налаштування</SelectItem>
           )}
           {templates.map((template) => (
             <SelectItem key={template.id} value={template.id.toString()}>
@@ -105,8 +119,16 @@ export function DocumentSelector({
         variant="outline"
         onClick={onSelectDocument}
         className="w-full border-slate-200 text-slate-700"
+        disabled={isPickerOpening}
       >
-        Change Document
+        {isPickerOpening ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Відкриття...
+          </>
+        ) : (
+          "Змінити документ"
+        )}
       </Button>
     </div>
   );

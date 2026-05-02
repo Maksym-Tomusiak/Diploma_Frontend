@@ -9,6 +9,7 @@ import {
   AlertCircle,
   RefreshCw,
   Search,
+  Trash2,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,7 @@ import { Label } from "@/components/ui/label";
 import { Pagination } from "@/components/ui/Pagination";
 import { Font } from "@/types/document";
 import { formatDate } from "@/lib/formatters";
+import { AddFontModal } from "./AddFontModal";
 
 interface FontsTableProps {
   fonts: Font[];
@@ -52,6 +54,14 @@ interface FontsTableProps {
   fontsError: string | null;
   onSeedFonts: () => void;
   onRefresh: () => void;
+  onCreateFont: (data: {
+    family: string;
+    category?: string;
+    variants?: string;
+    subsets?: string;
+    version?: string;
+  }) => Promise<boolean>;
+  onDeleteFont: (fontId: number) => Promise<boolean>;
 }
 
 export function FontsTable({
@@ -65,13 +75,31 @@ export function FontsTable({
   fontsError,
   onSeedFonts,
   onRefresh,
+  onCreateFont,
+  onDeleteFont,
 }: FontsTableProps) {
   const [selectedFont, setSelectedFont] = useState<Font | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [addFontOpen, setAddFontOpen] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleViewDetails = (font: Font) => {
     setSelectedFont(font);
     setDetailsOpen(true);
+  };
+
+  const handleDeleteClick = (font: Font) => {
+    setSelectedFont(font);
+    setDeleteConfirmOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedFont) return;
+    setIsDeleting(true);
+    await onDeleteFont(selectedFont.id);
+    setIsDeleting(false);
+    setDeleteConfirmOpen(false);
   };
 
   return (
@@ -89,10 +117,18 @@ export function FontsTable({
           </Button>
           <Button
             onClick={onSeedFonts}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
           >
             <Plus className="mr-2 h-4 w-4" />
             Seed Fonts
+          </Button>
+          <Button
+            onClick={() => setAddFontOpen(true)}
+            variant="outline"
+            className="border-slate-200 text-slate-700"
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Add Font
           </Button>
         </div>
       </div>
@@ -201,6 +237,13 @@ export function FontsTable({
                             <Edit className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-600 focus:text-red-600"
+                            onClick={() => handleDeleteClick(font)}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete Font
+                          </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -274,6 +317,41 @@ export function FontsTable({
         onPageChange={onPageChange}
         className="mt-4"
       />
+
+      <AddFontModal
+        isOpen={addFontOpen}
+        onClose={() => setAddFontOpen(false)}
+        onSubmit={onCreateFont}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Видалити шрифт?</DialogTitle>
+            <DialogDescription>
+              Ви впевнені, що хочете видалити шрифт "{selectedFont?.family}"? 
+              Цю дію неможливо буде скасувати.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4">
+            <Button
+              variant="ghost"
+              onClick={() => setDeleteConfirmOpen(false)}
+              disabled={isDeleting}
+            >
+              Скасувати
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Видалення..." : "Видалити"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
