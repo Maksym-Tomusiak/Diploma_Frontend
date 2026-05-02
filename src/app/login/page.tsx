@@ -35,7 +35,7 @@ export default function LoginPage() {
       await loginWithGoogle();
     } catch (error) {
       console.error("Login failed:", error);
-      setErrorMessage("Failed to initiate login. Please try again.");
+      setErrorMessage("Не вдалося ініціювати вхід. Будь ласка, спробуйте ще раз.");
       setIsLoading(false);
     }
   };
@@ -48,10 +48,10 @@ export default function LoginPage() {
             <FileText className="h-6 w-6" />
           </div>
           <CardTitle className="text-2xl font-bold text-slate-900">
-            Welcome back
+            Ласкаво просимо
           </CardTitle>
           <CardDescription className="text-slate-500">
-            Enter your details to sign in to your workspace
+            Введіть свої дані, щоб увійти в робочу область
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -60,7 +60,7 @@ export default function LoginPage() {
               <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm font-medium text-red-900">
-                  Authentication Error
+                  Помилка автентифікації
                 </p>
                 <p className="text-sm text-red-700 mt-1">{errorMessage}</p>
               </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
                 fill="#EA4335"
               />
             </svg>
-            {isLoading ? "Redirecting..." : "Continue with Google"}
+            {isLoading ? "Перенаправлення..." : "Продовжити з Google"}
           </Button>
 
           <div className="relative">
@@ -99,28 +99,27 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-xs uppercase">
               <span className="bg-white px-2 text-slate-500">
-                Secure authentication
+                Безпечна автентифікація
               </span>
             </div>
           </div>
 
           <div className="text-center text-sm text-slate-500">
-            Sign in securely with your Google account
+            Увійдіть безпечно за допомогою свого облікового запису Google
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4 border-t border-slate-100 pt-6">
           <div className="text-center text-sm text-slate-500">
-            Don&apos;t have an account?{" "}
+            Ще немає акаунта?{" "}
             <Link
               href="/register"
               className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
             >
-              Sign up
+              Зареєструватися
             </Link>
           </div>
           <p className="text-center text-xs text-slate-400 px-4">
-            By clicking continue, you agree to our Terms of Service and Privacy
-            Policy.
+            Натискаючи &quot;Продовжити&quot;, ви погоджуєтеся з нашими Умовами використання та Політикою конфіденційності.
           </p>
         </CardFooter>
       </Card>

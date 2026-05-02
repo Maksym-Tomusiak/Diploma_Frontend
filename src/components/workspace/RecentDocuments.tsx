@@ -32,23 +32,23 @@ export function RecentDocuments({
   return (
     <div className="space-y-3">
       <Label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-        Recent Documents
+        Останні документи
       </Label>
       <div className="space-y-2">
         {recentDocs.map((doc) => (
           <div
             key={doc.id}
-            className="p-2 rounded border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm"
+            className="p-2 rounded border border-slate-200 hover:bg-slate-50 cursor-pointer text-sm overflow-hidden min-w-0"
             onClick={() => onSelectDocument(doc)}
           >
             <div className="font-medium text-slate-900 truncate">
               {doc.title || doc.google_doc_id}
             </div>
             <div className="text-xs text-slate-500">
-              Last checked:{" "}
+              Остання перевірка:{" "}
               {doc.last_checked_at
-                ? new Date(doc.last_checked_at).toLocaleDateString()
-                : "Never"}
+                ? new Date(doc.last_checked_at).toLocaleDateString("uk-UA")
+                : "Ніколи"}
             </div>
           </div>
         ))}

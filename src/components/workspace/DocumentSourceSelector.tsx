@@ -32,6 +32,7 @@ interface DocumentSourceSelectorProps {
   selectedFile: File | null;
   onFileSelect: (file: File) => void;
   onClearFile: () => void;
+  isPickerOpening?: boolean;
 }
 
 export function DocumentSourceSelector({
@@ -50,34 +51,33 @@ export function DocumentSourceSelector({
   selectedFile,
   onFileSelect,
   onClearFile,
+  isPickerOpening,
 }: DocumentSourceSelectorProps) {
   return (
     <div className="space-y-4">
       <Label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-        Document Source
+        Джерело документа
       </Label>
 
       {/* Mode Toggle */}
-      <div className="grid grid-cols-2 gap-2">
+      <div className="flex flex-col gap-2">
         <Button
           variant={mode === "google" ? "default" : "outline"}
-          className="flex items-center gap-2"
+          className="flex items-center justify-center gap-3 h-11 px-4"
           onClick={() => onModeChange("google")}
           disabled={!isAuthenticated}
-          title={!isAuthenticated ? "Login to use Google Docs integration" : ""}
+          title={!isAuthenticated ? "Увійдіть, щоб скористатися інтеграцією з Google Docs" : ""}
         >
-          <CloudUpload className="h-4 w-4" />
-          <span className="hidden sm:inline">Google Docs</span>
-          <span className="sm:hidden">Google</span>
+          <CloudUpload className="h-5 w-5" />
+          <span className="font-medium">Google Docs</span>
         </Button>
         <Button
           variant={mode === "upload" ? "default" : "outline"}
-          className="flex items-center gap-2"
+          className="flex items-center justify-center gap-3 h-11 px-4"
           onClick={() => onModeChange("upload")}
         >
-          <FileText className="h-4 w-4" />
-          <span className="hidden sm:inline">Upload File</span>
-          <span className="sm:hidden">Upload</span>
+          <FileText className="h-5 w-5" />
+          <span className="font-medium">Завантажити файл</span>
         </Button>
       </div>
 
@@ -94,6 +94,7 @@ export function DocumentSourceSelector({
             onSelectDocument={onSelectDocument}
             onClearDocument={onClearDocument}
             onTemplateChange={onTemplateChange}
+            isPickerOpening={isPickerOpening}
           />
         ) : (
           <FileUploadSelector

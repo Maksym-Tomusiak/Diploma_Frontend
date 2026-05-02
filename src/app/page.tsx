@@ -43,34 +43,34 @@ export default function Landing() {
               <FileText className="h-5 w-5" />
             </div>
             <span className="text-xl font-bold tracking-tight text-slate-900">
-              FormatStand
+              Norma
             </span>
           </div>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-8">
             <a
               href="#features"
               className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
-              Features
+              Можливості
             </a>
             <a
               href="#how-it-works"
               className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
-              How it Works
+              Як це працює
             </a>
             <a
               href="#faq"
               className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
-              FAQ
+              Питання та відповіді
             </a>
           </nav>
 
           {/* Auth Buttons */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             {!isLoading &&
               (isAuthenticated ? (
                 <>
@@ -79,8 +79,8 @@ export default function Landing() {
                   >
                     <Button className="bg-blue-600 text-white hover:bg-blue-700 shadow-sm">
                       {user?.role === UserRole.ADMIN
-                        ? "Go to Admin"
-                        : "Go to App"}
+                        ? "До панелі адміна"
+                        : "До програми"}
                     </Button>
                   </Link>
                   <Button
@@ -89,7 +89,7 @@ export default function Landing() {
                     onClick={handleLogout}
                   >
                     <LogOut className="h-4 w-4 mr-2" />
-                    Logout
+                    Вийти
                   </Button>
                 </>
               ) : (
@@ -99,12 +99,12 @@ export default function Landing() {
                       variant="outline"
                       className="border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                     >
-                      Log in
+                      Увійти
                     </Button>
                   </Link>
                   <Link href="/register">
                     <Button className="bg-blue-600 text-white hover:bg-blue-700 shadow-sm">
-                      Get Started
+                      Почати роботу
                     </Button>
                   </Link>
                 </>
@@ -113,7 +113,7 @@ export default function Landing() {
 
           {/* Mobile Menu Toggle */}
           <button
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
@@ -126,21 +126,21 @@ export default function Landing() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-4">
+          <div className="lg:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-4">
             <a
               href="#features"
               className="block text-sm font-medium text-slate-600"
             >
-              Features
+              Можливості
             </a>
             <a
               href="#how-it-works"
               className="block text-sm font-medium text-slate-600"
             >
-              How it Works
+              Як це працює
             </a>
             <a href="#faq" className="block text-sm font-medium text-slate-600">
-              FAQ
+              Питання та відповіді
             </a>
             <div className="pt-4 flex flex-col gap-2">
               {!isLoading &&
@@ -151,8 +151,8 @@ export default function Landing() {
                     >
                       <Button className="w-full justify-center bg-blue-600">
                         {user?.role === UserRole.ADMIN
-                          ? "Go to Admin"
-                          : "Go to App"}
+                          ? "До панелі адміна"
+                          : "До програми"}
                       </Button>
                     </Link>
                     <Button
@@ -161,7 +161,7 @@ export default function Landing() {
                       onClick={handleLogout}
                     >
                       <LogOut className="h-4 w-4 mr-2" />
-                      Logout
+                      Вийти
                     </Button>
                   </>
                 ) : (
@@ -171,12 +171,12 @@ export default function Landing() {
                         variant="outline"
                         className="w-full justify-center"
                       >
-                        Log in
+                        Увійти
                       </Button>
                     </Link>
                     <Link href="/register">
                       <Button className="w-full justify-center bg-blue-600">
-                        Get Started
+                        Почати роботу
                       </Button>
                     </Link>
                   </>
@@ -193,13 +193,12 @@ export default function Landing() {
             {/* Left Content */}
             <div className="max-w-2xl">
               <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-6xl mb-6">
-                Automatic Formatting for{" "}
-                <span className="text-blue-600">Academic Papers</span>
+                Автоматичне форматування{" "}
+                <span className="text-blue-600">академічних робіт</span>
               </h1>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                Ensure your scientific work meets DSTU standards instantly. Save
-                hours of manual formatting and guarantee compliance with norm
-                control.
+                Миттєво приведіть свою наукову роботу у відповідність до стандартів ДСТУ. 
+                Заощаджуйте години на ручному форматуванні та гарантуйте відповідність нормативному контролю.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/app">
@@ -207,7 +206,7 @@ export default function Landing() {
                     size="lg"
                     className="bg-blue-600 hover:bg-blue-700 text-white h-12 px-8 text-base shadow-sm"
                   >
-                    Start Formatting Free
+                    Почати безкоштовно
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -217,7 +216,7 @@ export default function Landing() {
                     size="lg"
                     className="border-slate-300 text-slate-700 hover:bg-slate-50 h-12 px-8 text-base"
                   >
-                    Learn More
+                    Дізнатися більше
                   </Button>
                 </Link>
               </div>
@@ -233,7 +232,7 @@ export default function Landing() {
                     </div>
                   ))}
                 </div>
-                <p>Trusted by 1000+ students & researchers</p>
+                <p>Нам довіряють понад 1000 студентів та дослідників</p>
               </div>
             </div>
 
@@ -244,7 +243,7 @@ export default function Landing() {
                 <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
                   <div className="text-center p-8">
                     <FileText className="h-16 w-16 text-slate-400 mx-auto mb-4" />
-                    <p className="text-slate-500">Document Preview</p>
+                    <p className="text-slate-500">Попередній перегляд</p>
                   </div>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-tr from-slate-900/5 to-transparent pointer-events-none"></div>
@@ -254,11 +253,11 @@ export default function Landing() {
                   <div className="flex items-center gap-3">
                     <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
                     <span className="text-sm font-medium text-slate-700">
-                      Formatting complete
+                      Форматування завершено
                     </span>
                   </div>
                   <span className="text-xs text-slate-400 font-mono">
-                    100% Match
+                    100% відповідність
                   </span>
                 </div>
               </div>
@@ -275,11 +274,10 @@ export default function Landing() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-4">
-              Everything you need for perfect documents
+              Все необхідне для ідеальних документів
             </h2>
             <p className="text-lg text-slate-600">
-              Focus on your research, not margins and fonts. We handle the
-              technical requirements automatically.
+              Зосередьтеся на дослідженні, а не на полях та шрифтах. Ми автоматично подбаємо про технічні вимоги.
             </p>
           </div>
 
@@ -287,18 +285,18 @@ export default function Landing() {
             {[
               {
                 icon: <Zap className="h-6 w-6 text-blue-600" />,
-                title: "Google Docs Integration",
-                desc: "Seamlessly connect your Drive and format documents directly without downloading.",
+                title: "Інтеграція з Google Docs",
+                desc: "Легко підключайте свій Диск та форматуйте документи прямо без завантаження.",
               },
               {
                 icon: <ShieldCheck className="h-6 w-6 text-blue-600" />,
-                title: "Error Verification",
-                desc: "Automatic detection of font mismatches, incorrect spacing, and citation errors.",
+                title: "Перевірка помилок",
+                desc: "Автоматичне виявлення невідповідностей шрифтів, неправильних інтервалів та помилок у цитуванні.",
               },
               {
                 icon: <LayoutTemplate className="h-6 w-6 text-blue-600" />,
-                title: "Standard Compliance",
-                desc: "Strict adherence to DSTU and institutional guidelines for thesis and papers.",
+                title: "Відповідність стандартам",
+                desc: "Суворе доотримання ДСТУ та інституційних вимог до дисертацій та робіт.",
               },
             ].map((feature, i) => (
               <Card
@@ -322,30 +320,76 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section id="how-it-works" className="py-24 bg-white border-b border-slate-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-4">
+              Три прості кроки до ідеальної роботи
+            </h2>
+            <p className="text-lg text-slate-600">
+              Ми спростили процес форматування до мінімуму. Все, що вам потрібно — це ваш документ.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-12 relative">
+            {[
+              {
+                step: "01",
+                title: "Оберіть документ",
+                desc: "Авторизуйтеся через Google та оберіть потрібний документ прямо з вашого Drive або завантажте .docx файл."
+              },
+              {
+                step: "02",
+                title: "Виберіть шаблон",
+                desc: "Оберіть стандарт ДСТУ або налаштуйте власні параметри: поля, міжрядковий інтервал та шрифти."
+              },
+              {
+                step: "03",
+                title: "Отримайте результат",
+                desc: "Натисніть 'Застосувати формат' і за лічені секунди ваш документ буде повністю відповідати всім вимогам."
+              }
+            ].map((step, i) => (
+              <div key={i} className="text-center relative group">
+                <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white text-xl font-bold mb-6 shadow-lg shadow-blue-200 transition-transform group-hover:scale-110">
+                  {step.step}
+                </div>
+                <h3 className="text-xl font-semibold text-slate-900 mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-slate-600">
+                  {step.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section id="faq" className="py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 text-center mb-12">
-            Frequently Asked Questions
+            Часті запитання
           </h2>
 
           <Accordion type="single" collapsible className="w-full">
             {[
               {
-                q: "Is it compatible with Microsoft Word?",
-                a: "Currently we focus on Google Docs for seamless cloud integration, but you can export the result to Word format.",
+                q: "Чи сумісно це з Microsoft Word?",
+                a: "Наразі ми фокусуємося на Google Docs для безперешкодної хмарної інтеграції, але ви можете експортувати результат у формат Word.",
               },
               {
-                q: "Is my data secure?",
-                a: "Yes. We use Google's official APIs to access your documents only when you grant permission. We do not store your document content.",
+                q: "Чи безпечні мої дані?",
+                a: "Так. Ми використовуємо офіційні API Google для доступу до ваших документів лише за вашим дозволом. Ми не зберігаємо зміст ваших документів.",
               },
               {
-                q: "Can I customize the formatting rules?",
-                a: "Absolutely. You can choose from standard presets or manually adjust margins, fonts, and spacing in the workspace.",
+                q: "Чи можу я налаштувати правила форматування?",
+                a: "Звісно. Ви можете обрати стандартні пресети або вручну налаштувати поля, шрифти та інтервали в робочій області.",
               },
               {
-                q: "Is there a free trial?",
-                a: "Yes, the basic formatting features are free to use for your first 3 documents.",
+                q: "Чи є безкоштовний період?",
+                a: "Так, основні функції форматування безкоштовні. Гості мають ліміт на кількість перевірок на день.",
               },
             ].map((item, i) => (
               <AccordionItem
@@ -373,12 +417,12 @@ export default function Landing() {
               <FileText className="h-5 w-5" />
             </div>
             <span className="text-xl font-bold tracking-tight text-white">
-              FormatStand
+              Norma
             </span>
           </div>
 
           <p className="text-sm text-slate-400">
-            © 2024 FormatStand. All rights reserved.
+            © 2024 Norma. Всі права захищені.
           </p>
 
           <div className="flex gap-6">
@@ -386,19 +430,19 @@ export default function Landing() {
               href="#"
               className="text-sm text-slate-400 hover:text-white transition-colors"
             >
-              Privacy Policy
+              Політика конфіденційності
             </a>
             <a
               href="#"
               className="text-sm text-slate-400 hover:text-white transition-colors"
             >
-              Contact
+              Контакти
             </a>
             <a
               href="#"
               className="text-sm text-slate-400 hover:text-white transition-colors"
             >
-              Terms
+              Умови використання
             </a>
           </div>
         </div>

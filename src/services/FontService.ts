@@ -53,6 +53,26 @@ class FontService {
   async seedFonts(): Promise<FontSeedResponse> {
     return httpClient.post<FontSeedResponse>("/v1/fonts/seed", {});
   }
+
+  /**
+   * Create a new font manually (admin only)
+   */
+  async createFont(data: {
+    family: string;
+    category?: string;
+    variants?: string;
+    subsets?: string;
+    version?: string;
+  }): Promise<Font> {
+    return httpClient.post<Font>("/v1/fonts/", data);
+  }
+
+  /**
+   * Delete a font (admin only)
+   */
+  async deleteFont(fontId: number): Promise<{ success: boolean; message: string }> {
+    return httpClient.delete(`/v1/fonts/${fontId}`);
+  }
 }
 
 export const fontService = new FontService();

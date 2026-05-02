@@ -84,10 +84,29 @@ export class HttpClient {
     }
   }
 
+  private getFingerprint(): string {
+    if (typeof window === "undefined") return "server";
+
+    let fingerprint = localStorage.getItem("anon_fp");
+    if (!fingerprint) {
+      // Generate a simple unique fingerprint
+      fingerprint =
+        Math.random().toString(36).substring(2) +
+        Date.now().toString(36) +
+        Math.random().toString(36).substring(2);
+      localStorage.setItem("anon_fp", fingerprint);
+    }
+    return fingerprint;
+  }
+
   private initInterceptors() {
-    // Attach token before requests
+    // Attach token and fingerprint before requests
     this.axiosInstance.interceptors.request.use(
       (config) => {
+        // Add fingerprint for anonymous rate limiting
+        const fp = this.getFingerprint();
+        config.headers["X-Fingerprint"] = fp;
+
         if (typeof window !== "undefined") {
           const token = localStorage.getItem("token");
           if (token) {

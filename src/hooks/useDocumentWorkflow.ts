@@ -70,7 +70,7 @@ export function useDocumentWorkflow() {
     }
 
     setStatus("checking");
-    setLogs(["> Initializing format checker..."]);
+    setLogs(["> Ініціалізація перевірки формату..."]);
 
     try {
       // Trigger check with template or custom params - returns the new result directly
@@ -81,24 +81,22 @@ export function useDocumentWorkflow() {
 
       // Simulate progress steps
       const steps = [
-        "Reading document structure...",
-        "Verifying page margins...",
-        "Checking font families...",
-        "Analyzing paragraph indentation...",
-        "Validating citation format...",
-        "Scanning for table consistency...",
+        "Читання структури документа...",
+        "Перевірка полів сторінки...",
+        "Перевірка гарнітур шрифтів...",
+        "Аналіз абзацних відступів...",
       ];
 
       for (let i = 0; i < steps.length; i++) {
         await new Promise((resolve) => setTimeout(resolve, 500));
-        setLogs((prev) => [...prev, `> ${steps[i]} OK`]);
+        setLogs((prev) => [...prev, `> ${steps[i]} — Готово`]);
       }
 
       // Use the result returned from the check endpoint directly
       setCheckResult(newCheckResult);
       setLogs((prev) => [
         ...prev,
-        `> Analysis complete. ${newCheckResult.issues_count} issue(s) found.`,
+        `> Аналіз завершено. Знайдено зауважень: ${newCheckResult.issues_count}`,
       ]);
 
       setStatus("checked");
@@ -106,7 +104,7 @@ export function useDocumentWorkflow() {
       console.error("Check failed:", error);
       setLogs((prev) => [
         ...prev,
-        `> Error: ${error?.response?.data?.detail || error.message}`,
+        `> Помилка: ${error?.response?.data?.detail || error.message}`,
       ]);
       setStatus("idle");
     }
@@ -114,12 +112,12 @@ export function useDocumentWorkflow() {
 
   const startFormat = async (formatRequest: FormatDocumentRequest) => {
     if (!currentDocument) {
-      setLogs((prev) => [...prev, "> Error: No document selected"]);
+      setLogs((prev) => [...prev, "> Помилка: Документ не обрано"]);
       return;
     }
 
     setStatus("formatting");
-    setLogs((prev) => [...prev, "> Applying formatting to document..."]);
+    setLogs((prev) => [...prev, "> Застосування форматування до документа..."]);
 
     try {
       const result = await documentService.formatDocument(
@@ -129,34 +127,29 @@ export function useDocumentWorkflow() {
 
       // Show progress steps
       const steps = [
-        "Updating page margins...",
-        "Applying font styles...",
-        "Adjusting line spacing...",
-        "Finalizing changes...",
+        "Оновлення полів сторінки...",
+        "Застосування стилів шрифтів...",
+        "Налаштування міжрядкових інтервалів...",
+        "Фіналізація змін...",
       ];
 
       for (let i = 0; i < steps.length; i++) {
         await new Promise((resolve) => setTimeout(resolve, 400));
-        setLogs((prev) => [...prev, `> ${steps[i]} OK`]);
+        setLogs((prev) => [...prev, `> ${steps[i]} — Готово`]);
       }
 
       setFormatResult(result);
       setLogs((prev) => [
         ...prev,
-        `> Formatting complete! ${result.changes_applied} change(s) applied.`,
+        `> Форматування завершено! Застосовано змін: ${result.changes_applied}`,
       ]);
-
-      // Log applied changes
-      for (const change of result.changes) {
-        setLogs((prev) => [...prev, `  - ${change.description}`]);
-      }
 
       setStatus("complete");
     } catch (error: any) {
       console.error("Format failed:", error);
       setLogs((prev) => [
         ...prev,
-        `> Error: ${error?.response?.data?.detail || error.message}`,
+        `> Помилка: ${error?.response?.data?.detail || error.message}`,
       ]);
       setStatus("checked");
     }

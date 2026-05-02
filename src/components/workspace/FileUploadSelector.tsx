@@ -22,7 +22,7 @@ export function FileUploadSelector({
     const file = event.target.files?.[0];
     if (file) {
       if (!file.name.endsWith(".docx")) {
-        alert("Please select a .docx file");
+        alert("Будь ласка, оберіть файл .docx");
         return;
       }
       onFileSelect(file);
@@ -52,9 +52,9 @@ export function FileUploadSelector({
           <div className="flex flex-col items-center gap-2">
             <Upload className="h-6 w-6 text-slate-400" />
             <span className="text-sm font-medium text-slate-600">
-              Upload .docx file
+              Завантажити файл .docx
             </span>
-            <span className="text-xs text-slate-400">Click to browse</span>
+            <span className="text-xs text-slate-400">Натисніть для огляду</span>
           </div>
         </Button>
       ) : (

@@ -81,6 +81,16 @@ class AuthService {
     }>("/v1/auth/refresh-google-token");
     return response.google_access_token;
   }
+
+  /**
+   * Get remaining checks for anonymous user
+   */
+  async getRemainingChecks(): Promise<number> {
+    const response = await httpClient.get<{ remaining_checks: number }>(
+      "/v1/auth/remaining-checks"
+    );
+    return response.remaining_checks;
+  }
 }
 
 export const authService = new AuthService();

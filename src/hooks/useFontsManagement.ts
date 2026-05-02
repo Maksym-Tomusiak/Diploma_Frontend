@@ -103,6 +103,50 @@ export function useFontsManagement(
     fetchFonts();
   };
 
+  const handleCreateFont = async (data: {
+    family: string;
+    category?: string;
+    variants?: string;
+    subsets?: string;
+    version?: string;
+  }) => {
+    try {
+      await fontService.createFont(data);
+      toast({
+        title: "Font created",
+        description: `Font "${data.family}" has been successfully added.`,
+      });
+      await fetchFonts();
+      return true;
+    } catch (err: any) {
+      toast({
+        variant: "destructive",
+        title: "Failed to create font",
+        description: err.response?.data?.detail || "An error occurred",
+      });
+      return false;
+    }
+  };
+
+  const handleDeleteFont = async (fontId: number) => {
+    try {
+      await fontService.deleteFont(fontId);
+      toast({
+        title: "Font deleted",
+        description: "The font has been successfully removed.",
+      });
+      await fetchFonts();
+      return true;
+    } catch (err: any) {
+      toast({
+        variant: "destructive",
+        title: "Failed to delete font",
+        description: err.response?.data?.detail || "An error occurred",
+      });
+      return false;
+    }
+  };
+
   return {
     fonts,
     total,
@@ -116,5 +160,7 @@ export function useFontsManagement(
     seeding,
     handleSeedFonts,
     handleRefresh,
+    handleCreateFont,
+    handleDeleteFont,
   };
 }
