@@ -416,10 +416,10 @@ export default function AppWorkspace() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-slate-50 overflow-hidden font-sans relative">
+    <div className="flex flex-col h-screen bg-slate-50 overflow-hidden font-sans relative">
       {/* Anonymous user banner */}
       {!isAuthenticated && !isLoading && (
-        <div className="bg-blue-600 text-white text-sm py-2 px-4 text-center z-50 shrink-0">
+        <div className="bg-blue-600 text-white text-sm py-2 px-4 text-center z-50 shrink-0 w-full">
           Ви як гість маєте{" "}
           <span className="font-bold underline">
             {remainingChecks !== null ? remainingChecks : "..."}
@@ -480,6 +480,7 @@ export default function AppWorkspace() {
         />
       )}
 
+      {/* Main Content Area */}
       <div className="flex flex-1 flex-col lg:flex-row overflow-hidden relative">
         <div
           className={cn(
