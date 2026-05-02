@@ -12,10 +12,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+function LoginContent() {
   const { loginWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -124,5 +124,24 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded bg-slate-900 text-white mb-4 animate-pulse">
+            <FileText className="h-6 w-6" />
+          </div>
+          <h1 className="text-xl font-semibold text-slate-900 mb-2">
+            Завантаження...
+          </h1>
+        </div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }
