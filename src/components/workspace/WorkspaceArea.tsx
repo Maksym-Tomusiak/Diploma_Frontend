@@ -139,6 +139,7 @@ export function WorkspaceArea({
             size="sm"
             className="h-8 gap-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
             onClick={() => setShowLimitations(true)}
+            aria-label="Переглянути обмеження"
           >
             <Info className="h-4 w-4" />
             <span className="hidden xs:inline">Обмеження</span>

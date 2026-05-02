@@ -27,6 +27,7 @@ interface SearchComboboxProps {
   emptyText?: string;
   className?: string;
   selectedLabel?: string;
+  ariaLabel?: string;
 }
 
 export function SearchCombobox({
@@ -38,6 +39,7 @@ export function SearchCombobox({
   emptyText = "No results found.",
   className,
   selectedLabel,
+  ariaLabel,
 }: SearchComboboxProps) {
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState<
@@ -84,6 +86,7 @@ export function SearchCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          aria-label={ariaLabel || placeholder}
           className={cn("w-full justify-between", className)}
         >
           {selectedLabel || placeholder}

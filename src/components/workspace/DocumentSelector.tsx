@@ -83,6 +83,7 @@ export function DocumentSelector({
             size="icon"
             className="h-6 w-6 text-slate-400 hover:text-slate-700"
             onClick={onClearDocument}
+            aria-label="Видалити документ"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -99,7 +100,7 @@ export function DocumentSelector({
         }}
         disabled={loadingTemplates}
       >
-        <SelectTrigger>
+        <SelectTrigger aria-label="Оберіть шаблон">
           <SelectValue placeholder="Оберіть шаблон" />
         </SelectTrigger>
         <SelectContent>
