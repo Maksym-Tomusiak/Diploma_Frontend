@@ -84,7 +84,7 @@ export function TemplateParamsEditor({
           }}
           disabled={loadingTemplates}
         >
-          <SelectTrigger>
+          <SelectTrigger aria-label="Базовий шаблон">
             <SelectValue placeholder="Оберіть шаблон" />
           </SelectTrigger>
           <SelectContent>
@@ -114,6 +114,7 @@ export function TemplateParamsEditor({
               searchPlaceholder="Пошук шрифтів..."
               emptyText="Шрифтів не знайдено."
               selectedLabel={selectedFontFamily || ""}
+              ariaLabel="Гарнітура шрифту"
             />
           </div>
           <div className="space-y-1">
