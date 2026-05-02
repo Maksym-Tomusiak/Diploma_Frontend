@@ -50,11 +50,11 @@ export function FileUploadSelector({
           onClick={handleClick}
         >
           <div className="flex flex-col items-center gap-2">
-            <Upload className="h-6 w-6 text-slate-400" />
+            <Upload className="h-6 w-6 text-slate-500" />
             <span className="text-sm font-medium text-slate-600">
               Завантажити файл .docx
             </span>
-            <span className="text-xs text-slate-400">Натисніть для огляду</span>
+            <span className="text-xs text-slate-500">Натисніть для огляду</span>
           </div>
         </Button>
       ) : (
