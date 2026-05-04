@@ -48,6 +48,8 @@ jobs:
           # Платформа linux/arm64 для процесорів Ampere A1
           platforms: linux/arm64
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
 
   deploy:
     needs: build-and-push
