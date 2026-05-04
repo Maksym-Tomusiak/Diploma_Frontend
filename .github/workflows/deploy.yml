@@ -20,6 +20,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Lowercase repo name
+        run: |
+          # Перетворюємо весь шлях (наприклад, Maksym-Tomusiak/Diploma_API) на нижній регістр
+          IMAGE_PATH=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_NAME=$IMAGE_PATH" >> ${GITHUB_ENV}
+
       # ЦЕЙ КРОК КРИТИЧНИЙ ДЛЯ ORACLE ARM
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
