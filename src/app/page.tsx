@@ -197,8 +197,9 @@ export default function Landing() {
                 <span className="text-blue-600">академічних робіт</span>
               </h1>
               <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                Миттєво приведіть свою наукову роботу у відповідність до стандартів ДСТУ. 
-                Заощаджуйте години на ручному форматуванні та гарантуйте відповідність нормативному контролю.
+                Миттєво приведіть свою наукову роботу у відповідність до
+                стандартів ДСТУ. Заощаджуйте години на ручному форматуванні та
+                гарантуйте відповідність нормативному контролю.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/app">
@@ -206,7 +207,7 @@ export default function Landing() {
                     size="lg"
                     className="bg-blue-600 hover:bg-blue-700 text-white h-12 px-8 text-base shadow-sm"
                   >
-                    Почати безкоштовно
+                    Почати безкоштовн
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -277,7 +278,8 @@ export default function Landing() {
               Все необхідне для ідеальних документів
             </h2>
             <p className="text-lg text-slate-600">
-              Зосередьтеся на дослідженні, а не на полях та шрифтах. Ми автоматично подбаємо про технічні вимоги.
+              Зосередьтеся на дослідженні, а не на полях та шрифтах. Ми
+              автоматично подбаємо про технічні вимоги.
             </p>
           </div>
 
@@ -321,14 +323,18 @@ export default function Landing() {
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works" className="py-24 bg-white border-b border-slate-100">
+      <section
+        id="how-it-works"
+        className="py-24 bg-white border-b border-slate-100"
+      >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-4">
               Три прості кроки до ідеальної роботи
             </h2>
             <p className="text-lg text-slate-600">
-              Ми спростили процес форматування до мінімуму. Все, що вам потрібно — це ваш документ.
+              Ми спростили процес форматування до мінімуму. Все, що вам потрібно
+              — це ваш документ.
             </p>
           </div>
 
@@ -337,18 +343,18 @@ export default function Landing() {
               {
                 step: "01",
                 title: "Оберіть документ",
-                desc: "Авторизуйтеся через Google та оберіть потрібний документ прямо з вашого Drive або завантажте .docx файл."
+                desc: "Авторизуйтеся через Google та оберіть потрібний документ прямо з вашого Drive або завантажте .docx файл.",
               },
               {
                 step: "02",
                 title: "Виберіть шаблон",
-                desc: "Оберіть стандарт ДСТУ або налаштуйте власні параметри: поля, міжрядковий інтервал та шрифти."
+                desc: "Оберіть стандарт ДСТУ або налаштуйте власні параметри: поля, міжрядковий інтервал та шрифти.",
               },
               {
                 step: "03",
                 title: "Отримайте результат",
-                desc: "Натисніть 'Застосувати формат' і за лічені секунди ваш документ буде повністю відповідати всім вимогам."
-              }
+                desc: "Натисніть 'Застосувати формат' і за лічені секунди ваш документ буде повністю відповідати всім вимогам.",
+              },
             ].map((step, i) => (
               <div key={i} className="text-center relative group">
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-white text-xl font-bold mb-6 shadow-lg shadow-blue-200 transition-transform group-hover:scale-110">
@@ -357,9 +363,7 @@ export default function Landing() {
                 <h3 className="text-xl font-semibold text-slate-900 mb-3">
                   {step.title}
                 </h3>
-                <p className="text-slate-600">
-                  {step.desc}
-                </p>
+                <p className="text-slate-600">{step.desc}</p>
               </div>
             ))}
           </div>
