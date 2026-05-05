@@ -207,7 +207,7 @@ export default function Landing() {
                     size="lg"
                     className="bg-blue-600 hover:bg-blue-700 text-white h-12 px-8 text-base shadow-sm"
                   >
-                    Почати безкоштовн
+                    Почати безкоштовно
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
