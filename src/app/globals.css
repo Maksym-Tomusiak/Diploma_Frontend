@@ -180,3 +180,140 @@ h6 {
     @apply bg-background text-foreground;
   }
 }
+
+/* Accessibility Overlay Styles */
+html {
+  font-size: var(--a11y-font-size, 100%) !important;
+}
+
+body.a11y-line-height,
+body.a11y-line-height * {
+  line-height: var(--a11y-line-height) !important;
+}
+
+body.a11y-letter-spacing,
+body.a11y-letter-spacing * {
+  letter-spacing: var(--a11y-letter-spacing) !important;
+}
+
+body.a11y-text-align-left,
+body.a11y-text-align-left * {
+  text-align: left !important;
+}
+
+body.a11y-text-align-center,
+body.a11y-text-align-center * {
+  text-align: center !important;
+}
+
+body.a11y-text-align-right,
+body.a11y-text-align-right * {
+  text-align: right !important;
+}
+
+body.a11y-text-transform,
+body.a11y-text-transform * {
+  text-transform: var(--a11y-text-transform) !important;
+}
+
+/* Contrast Modes */
+body.a11y-contrast-high {
+  --background: oklch(0 0 0);
+  --foreground: oklch(1 0 0);
+  --card: oklch(0 0 0);
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0 0 0);
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(0.9 0.2 100); /* High visibility Yellow */
+  --primary-foreground: oklch(0 0 0);
+  --secondary: oklch(0 0 0);
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.2 0 0);
+  --muted-foreground: oklch(1 0 0);
+  --accent: oklch(0.9 0.2 100);
+  --accent-foreground: oklch(0 0 0);
+  --destructive: oklch(0.6 0.25 29);
+  --border: oklch(1 0 0);
+  --input: oklch(1 0 0);
+  --ring: oklch(0.9 0.2 100);
+}
+
+body.a11y-contrast-dark {
+  --background: oklch(0.15 0 0);
+  --foreground: oklch(0.85 0.1 140); /* Greenish text */
+  --card: oklch(0.1 0 0);
+  --card-foreground: oklch(0.85 0.1 140);
+  --popover: oklch(0.1 0 0);
+  --popover-foreground: oklch(0.85 0.1 140);
+  --primary: oklch(0.85 0.1 140);
+  --primary-foreground: oklch(0.1 0 0);
+  --border: oklch(0.3 0 0);
+  --input: oklch(0.3 0 0);
+}
+
+body.a11y-invert #a11y-wrapper {
+  filter: invert(100%) hue-rotate(180deg) !important;
+  background-color: #fff; /* Ensure there's a background to invert */
+}
+/* Don't invert images/videos back if they are within inverted body unless desired, standard practice is to invert them back: */
+body.a11y-invert #a11y-wrapper img,
+body.a11y-invert #a11y-wrapper video,
+body.a11y-invert #a11y-wrapper picture {
+  filter: invert(100%) hue-rotate(180deg) !important;
+}
+
+body.a11y-monochrome #a11y-wrapper {
+  filter: grayscale(100%) !important;
+}
+
+body.a11y-low-saturation #a11y-wrapper {
+  filter: saturate(30%) !important;
+}
+
+body.a11y-high-saturation #a11y-wrapper {
+  filter: saturate(200%) !important;
+}
+
+/* Navigation Aids */
+body.a11y-highlight-links a,
+body.a11y-highlight-links button {
+  outline: 3px solid #ffcc00 !important;
+  outline-offset: 2px !important;
+}
+
+body.a11y-highlight-headings h1,
+body.a11y-highlight-headings h2,
+body.a11y-highlight-headings h3,
+body.a11y-highlight-headings h4,
+body.a11y-highlight-headings h5,
+body.a11y-highlight-headings h6 {
+  outline: 3px solid #00ccff !important;
+  outline-offset: 2px !important;
+}
+
+body.a11y-cursor-big-black,
+body.a11y-cursor-big-black * {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="black" stroke="white" stroke-width="2"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L6.35 2.86a.5.5 0 0 0-.85.35z"/></svg>') 1 1, auto !important;
+}
+
+body.a11y-cursor-big-white,
+body.a11y-cursor-big-white * {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="2"><path d="M5.5 3.21V20.8c0 .45.54.67.85.35l4.86-4.86a.5.5 0 0 1 .35-.15h6.87c.45 0 .67-.54.35-.85L6.35 2.86a.5.5 0 0 0-.85.35z"/></svg>') 1 1, auto !important;
+}
+
+body.a11y-pause-animations #a11y-wrapper,
+body.a11y-pause-animations #a11y-wrapper *,
+body.a11y-pause-animations #a11y-wrapper *::before,
+body.a11y-pause-animations #a11y-wrapper *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+body.a11y-dyslexia-font,
+body.a11y-dyslexia-font * {
+  font-family: "OpenDyslexic", "Comic Sans MS", "Lexend", sans-serif !important;
+}
+
+body.a11y-bold-text * {
+  font-weight: bold !important;
+}
