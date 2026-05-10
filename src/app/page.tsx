@@ -258,7 +258,7 @@ export default function Landing() {
                 <div className="flex flex-1 overflow-hidden p-3 sm:p-4 gap-4">
                   {/* Left Sidebar (Issues) - Hidden on mobile */}
                   <div className="hidden sm:flex w-1/3 flex-col gap-3">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Знайдені помилки</div>
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Знайдені помилки</div>
                     
                     <div className="bg-white p-3 rounded-lg border border-red-100 shadow-sm flex flex-col gap-1.5 relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500"></div>
@@ -272,7 +272,7 @@ export default function Landing() {
                     <div className="bg-white p-3 rounded-lg border border-amber-100 shadow-sm flex flex-col gap-1.5 relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500"></div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-amber-600">Відступ</span>
+                        <span className="text-xs font-bold text-amber-700">Відступ</span>
                         <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">Стор. 5</span>
                       </div>
                       <p className="text-xs text-slate-600 line-clamp-2">Міжрядковий інтервал 1.15 замість 1.5</p>
