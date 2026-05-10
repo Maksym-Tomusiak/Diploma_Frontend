@@ -237,28 +237,89 @@ export default function Landing() {
               </div>
             </div>
 
-            {/* Right Visual */}
-            <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-              <div className="relative rounded-lg border border-slate-200 bg-white shadow-2xl overflow-hidden aspect-[4/3]">
-                {/* Placeholder for hero image */}
-                <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <FileText className="h-16 w-16 text-slate-400 mx-auto mb-4" />
-                    <p className="text-slate-500">Попередній перегляд</p>
+            {/* Right Visual - Interactive App Mockup */}
+            <div className="relative mx-auto w-full max-w-lg lg:max-w-none transform perspective-1000 sm:rotate-y-[-5deg] sm:rotate-x-[2deg] hover:rotate-y-0 hover:rotate-x-0 transition-transform duration-700 ease-out mt-8 lg:mt-0">
+              <div className="relative rounded-xl border border-slate-200/60 bg-slate-50 shadow-2xl overflow-hidden h-[380px] sm:h-auto sm:aspect-[4/3] flex flex-col">
+                {/* Mockup Header (macOS style) */}
+                <div className="h-10 bg-slate-100/80 backdrop-blur border-b border-slate-200 flex items-center px-3 sm:px-4 gap-2">
+                  <div className="flex gap-1.5 shrink-0">
+                    <div className="h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-red-400"></div>
+                    <div className="h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-amber-400"></div>
+                    <div className="h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-emerald-400"></div>
+                  </div>
+                  <div className="mx-auto flex items-center gap-1.5 sm:gap-2 px-2 py-1 sm:px-3 sm:py-1 bg-white rounded-md border border-slate-200 text-[10px] sm:text-xs text-slate-500 shadow-sm max-w-[140px] sm:max-w-xs">
+                    <FileText className="h-3 w-3 shrink-0" />
+                    <span className="truncate">Курсова_робота_фінал.docx</span>
+                  </div>
+                  <div className="w-8 sm:w-10 shrink-0"></div> {/* Spacer for symmetry */}
+                </div>
+
+                {/* Mockup Body */}
+                <div className="flex flex-1 overflow-hidden p-3 sm:p-4 gap-4">
+                  {/* Left Sidebar (Issues) - Hidden on mobile */}
+                  <div className="hidden sm:flex w-1/3 flex-col gap-3">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Знайдені помилки</div>
+                    
+                    <div className="bg-white p-3 rounded-lg border border-red-100 shadow-sm flex flex-col gap-1.5 relative overflow-hidden">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500"></div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-red-600">Шрифт</span>
+                        <span className="text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-medium">Стор. 2</span>
+                      </div>
+                      <p className="text-xs text-slate-600 truncate">Знайдено Arial (вимагається Times New Roman)</p>
+                    </div>
+
+                    <div className="bg-white p-3 rounded-lg border border-amber-100 shadow-sm flex flex-col gap-1.5 relative overflow-hidden">
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500"></div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-amber-600">Відступ</span>
+                        <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">Стор. 5</span>
+                      </div>
+                      <p className="text-xs text-slate-600 line-clamp-2">Міжрядковий інтервал 1.15 замість 1.5</p>
+                    </div>
+                    
+                    <div className="mt-auto pt-2">
+                       <div className="w-full bg-blue-50 hover:bg-blue-100 border border-blue-100 text-blue-600 text-xs font-medium py-2 rounded-md text-center cursor-pointer transition-colors">
+                         Переглянути звіт
+                       </div>
+                    </div>
+                  </div>
+
+                  {/* Main Document Area */}
+                  <div className="flex-1 bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-6 overflow-hidden relative flex flex-col">
+                    {/* Fake Document Content */}
+                    <div className="w-3/4 h-4 sm:h-5 bg-slate-200 rounded mb-4 sm:mb-6"></div>
+                    
+                    <div className="space-y-2.5 sm:space-y-3 flex-1">
+                      <div className="w-full h-2 sm:h-2.5 bg-slate-100 rounded"></div>
+                      <div className="w-full h-2 sm:h-2.5 bg-slate-100 rounded"></div>
+                      <div className="w-5/6 h-2 sm:h-2.5 bg-slate-100 rounded"></div>
+                      
+                      {/* Error Highlight 1 */}
+                      <div className="relative pt-1 pb-1 my-2">
+                        <div className="absolute -inset-1 sm:-inset-1.5 bg-red-50 rounded-md border border-red-200"></div>
+                        <div className="w-full h-2 sm:h-2.5 bg-slate-400/60 rounded relative z-10"></div>
+                        <div className="w-4/5 h-2 sm:h-2.5 bg-slate-400/60 rounded relative z-10 mt-1.5 sm:mt-2"></div>
+                      </div>
+                      
+                      {/* Error Highlight 2 */}
+                      <div className="relative pt-1 pb-1 my-3 sm:my-4">
+                        <div className="absolute -inset-1 sm:-inset-1.5 bg-amber-50 rounded-md border border-amber-200"></div>
+                        <div className="w-full h-2 sm:h-2.5 bg-slate-300 rounded relative z-10"></div>
+                        <div className="w-2/3 h-2 sm:h-2.5 bg-slate-300 rounded relative z-10 mt-1.5 sm:mt-2"></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-tr from-slate-900/5 to-transparent pointer-events-none"></div>
 
-                {/* Floating Badge */}
-                <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur border border-slate-200 p-4 rounded-md shadow-lg flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <span className="text-sm font-medium text-slate-700">
-                      Форматування завершено
-                    </span>
+                {/* Floating Status */}
+                <div className="absolute bottom-4 sm:bottom-5 left-1/2 -translate-x-1/2 bg-slate-900/95 text-white backdrop-blur px-4 py-2 sm:px-5 sm:py-2.5 rounded-full shadow-2xl flex items-center gap-2 sm:gap-3 border border-slate-700/50 transform sm:translate-y-2 opacity-95">
+                  <div className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5 shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-blue-500"></span>
                   </div>
-                  <span className="text-xs text-slate-400 font-mono">
-                    100% відповідність
+                  <span className="text-[10px] sm:text-sm font-medium tracking-wide whitespace-nowrap">
+                    Аналіз форматування...
                   </span>
                 </div>
               </div>
