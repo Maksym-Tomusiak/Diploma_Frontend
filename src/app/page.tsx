@@ -251,37 +251,52 @@ export default function Landing() {
                     <FileText className="h-3 w-3 shrink-0" />
                     <span className="truncate">Курсова_робота_фінал.docx</span>
                   </div>
-                  <div className="w-8 sm:w-10 shrink-0"></div> {/* Spacer for symmetry */}
+                  <div className="w-8 sm:w-10 shrink-0"></div>{" "}
+                  {/* Spacer for symmetry */}
                 </div>
 
                 {/* Mockup Body */}
                 <div className="flex flex-1 overflow-hidden p-3 sm:p-4 gap-4">
                   {/* Left Sidebar (Issues) - Hidden on mobile */}
                   <div className="hidden sm:flex w-1/3 flex-col gap-3">
-                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">Знайдені помилки</div>
-                    
+                    <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1">
+                      Знайдені помилки
+                    </div>
+
                     <div className="bg-white p-3 rounded-lg border border-red-100 shadow-sm flex flex-col gap-1.5 relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500"></div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-red-600">Шрифт</span>
-                        <span className="text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-medium">Стор. 2</span>
+                        <span className="text-xs font-bold text-red-600">
+                          Шрифт
+                        </span>
+                        <span className="text-[9px] bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-medium">
+                          Стор. 2
+                        </span>
                       </div>
-                      <p className="text-xs text-slate-600 truncate">Знайдено Arial (вимагається Times New Roman)</p>
+                      <p className="text-xs text-slate-600 truncate">
+                        Знайдено Arial (вимагається Times New Roman)
+                      </p>
                     </div>
 
                     <div className="bg-white p-3 rounded-lg border border-amber-100 shadow-sm flex flex-col gap-1.5 relative overflow-hidden">
                       <div className="absolute left-0 top-0 bottom-0 w-1 bg-amber-500"></div>
                       <div className="flex justify-between items-center">
-                        <span className="text-xs font-bold text-amber-700">Відступ</span>
-                        <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">Стор. 5</span>
+                        <span className="text-xs font-bold text-amber-700">
+                          Відступ
+                        </span>
+                        <span className="text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">
+                          Стор. 5
+                        </span>
                       </div>
-                      <p className="text-xs text-slate-600 line-clamp-2">Міжрядковий інтервал 1.15 замість 1.5</p>
+                      <p className="text-xs text-slate-600 line-clamp-2">
+                        Міжрядковий інтервал 1.15 замість 1.5
+                      </p>
                     </div>
-                    
+
                     <div className="mt-auto pt-2">
-                       <div className="w-full bg-blue-50 hover:bg-blue-100 border border-blue-100 text-blue-600 text-xs font-medium py-2 rounded-md text-center cursor-pointer transition-colors">
-                         Переглянути звіт
-                       </div>
+                      <div className="w-full bg-blue-50 hover:bg-blue-100 border border-blue-100 text-blue-600 text-xs font-medium py-2 rounded-md text-center cursor-pointer transition-colors">
+                        Переглянути звіт
+                      </div>
                     </div>
                   </div>
 
@@ -289,19 +304,19 @@ export default function Landing() {
                   <div className="flex-1 bg-white rounded-lg border border-slate-200 shadow-sm p-4 sm:p-6 overflow-hidden relative flex flex-col">
                     {/* Fake Document Content */}
                     <div className="w-3/4 h-4 sm:h-5 bg-slate-200 rounded mb-4 sm:mb-6"></div>
-                    
+
                     <div className="space-y-2.5 sm:space-y-3 flex-1">
                       <div className="w-full h-2 sm:h-2.5 bg-slate-100 rounded"></div>
                       <div className="w-full h-2 sm:h-2.5 bg-slate-100 rounded"></div>
                       <div className="w-5/6 h-2 sm:h-2.5 bg-slate-100 rounded"></div>
-                      
+
                       {/* Error Highlight 1 */}
                       <div className="relative pt-1 pb-1 my-2">
                         <div className="absolute -inset-1 sm:-inset-1.5 bg-red-50 rounded-md border border-red-200"></div>
                         <div className="w-full h-2 sm:h-2.5 bg-slate-400/60 rounded relative z-10"></div>
                         <div className="w-4/5 h-2 sm:h-2.5 bg-slate-400/60 rounded relative z-10 mt-1.5 sm:mt-2"></div>
                       </div>
-                      
+
                       {/* Error Highlight 2 */}
                       <div className="relative pt-1 pb-1 my-3 sm:my-4">
                         <div className="absolute -inset-1 sm:-inset-1.5 bg-amber-50 rounded-md border border-amber-200"></div>
@@ -487,27 +502,33 @@ export default function Landing() {
           </div>
 
           <p className="text-sm text-slate-400">
-            © 2024 Norma. Всі права захищені.
+            © 2026 Norma. Всі права захищені.
           </p>
 
-          <div className="flex gap-6">
-            <a
-              href="#"
+          <div className="flex flex-wrap gap-4 sm:gap-6 justify-center sm:justify-end mt-4 md:mt-0">
+            <Link
+              href="/privacy-policy"
               className="text-sm text-slate-400 hover:text-white transition-colors"
             >
               Політика конфіденційності
-            </a>
-            <a
-              href="#"
-              className="text-sm text-slate-400 hover:text-white transition-colors"
-            >
-              Контакти
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/terms-of-service"
               className="text-sm text-slate-400 hover:text-white transition-colors"
             >
               Умови використання
+            </Link>
+            <Link
+              href="/data-deletion"
+              className="text-sm text-slate-400 hover:text-white transition-colors"
+            >
+              Видалення даних
+            </Link>
+            <a
+              href="mailto:maxtomusiak315@gmail.com"
+              className="text-sm text-slate-400 hover:text-white transition-colors"
+            >
+              Контакти
             </a>
           </div>
         </div>
