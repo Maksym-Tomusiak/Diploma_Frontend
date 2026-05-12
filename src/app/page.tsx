@@ -533,7 +533,7 @@ export default function Landing() {
           </div>
         </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8 text-center border-t border-slate-800 pt-8">
-          <p className="text-xs text-slate-500 max-w-[525px] mx-auto leading-relaxed">
+          <p className="text-xs text-slate-400 max-w-[525px] mx-auto leading-relaxed">
             Сервіс розробив: Томусяк Максим за участі &quot;Науково-дослідної
             лабораторії інноваційних систем моделювання, симуляції та цифрової
             візуалізації&quot;
