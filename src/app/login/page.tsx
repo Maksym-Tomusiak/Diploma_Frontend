@@ -125,7 +125,7 @@ function LoginContent() {
           </CardFooter>
         </Card>
       </div>
-      <footer className="mt-8 text-center text-xs text-slate-400 max-w-[525px] mx-auto leading-relaxed">
+      <footer className="mt-8 text-center text-xs text-slate-500 max-w-[525px] mx-auto leading-relaxed">
         Сервіс розробив: Томусяк Максим за участі &quot;Науково-дослідної лабораторії інноваційних систем моделювання, симуляції та цифрової візуалізації&quot;
       </footer>
     </div>
