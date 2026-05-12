@@ -55,8 +55,11 @@ export default function NotFound() {
         </div>
       </main>
 
-      <footer className="py-8 text-center text-sm text-slate-500 border-t border-slate-200 mt-auto">
+      <footer className="py-8 text-center text-sm text-slate-500 border-t border-slate-200 mt-auto px-4">
         <p>© 2026 Norma. Всі права захищені.</p>
+        <p className="mt-2 text-xs text-slate-400 max-w-[525px] mx-auto leading-relaxed">
+          Сервіс розробив: Томусяк Максим за участі &quot;Науково-дослідної лабораторії інноваційних систем моделювання, симуляції та цифрової візуалізації&quot;
+        </p>
       </footer>
     </div>
   );

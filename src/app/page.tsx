@@ -457,10 +457,10 @@ export default function Landing() {
             {[
               {
                 q: "Чи сумісно це з Microsoft Word?",
-                a: "Наразі ми фокусуємося на Google Docs для безперешкодної хмарної інтеграції, але ви можете експортувати результат у формат Word.",
+                a: "Цей сервіс працює як з Google Docs, так і з фізичними .docx файлами.",
               },
               {
-                q: "Чи безпечні мої дані?",
+                q: "Чи мої дані залишаються конфіденційними?",
                 a: "Так. Ми використовуємо офіційні API Google для доступу до ваших документів лише за вашим дозволом. Ми не зберігаємо зміст ваших документів.",
               },
               {
@@ -531,6 +531,13 @@ export default function Landing() {
               Контакти
             </a>
           </div>
+        </div>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8 text-center border-t border-slate-800 pt-8">
+          <p className="text-xs text-slate-500 max-w-[525px] mx-auto leading-relaxed">
+            Сервіс розробив: Томусяк Максим за участі &quot;Науково-дослідної
+            лабораторії інноваційних систем моделювання, симуляції та цифрової
+            візуалізації&quot;
+          </p>
         </div>
       </footer>
     </div>
