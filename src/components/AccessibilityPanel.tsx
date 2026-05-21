@@ -262,53 +262,53 @@ export function AccessibilityPanel() {
           className="sm:max-w-lg h-[85vh] sm:h-[80vh] flex flex-col p-0 gap-0 overflow-hidden"
           showCloseButton={true}
         >
-          <DialogHeader className="px-8 py-6 pb-4 border-b">
+          <DialogHeader className="px-4 sm:px-8 py-6 pb-4 border-b">
             <DialogTitle className="text-2xl font-bold flex items-center gap-2">
               <Accessibility className="h-6 w-6" />
               Панель доступності
             </DialogTitle>
           </DialogHeader>
 
-          <ScrollArea className="flex-1 px-8 py-6">
+          <ScrollArea className="flex-1 px-4 sm:px-8 py-6">
             <div className="space-y-8 pb-8">
               {/* Profiles */}
               <section className="space-y-4">
                 <h3 className="font-semibold text-lg flex items-center gap-2">
                   <Zap className="h-5 w-5" /> Профілі (Пресет)
                 </h3>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <Button
                     variant="outline"
                     onClick={() => applyProfile("seizure")}
-                    className="justify-start text-xs h-auto py-2 px-3"
+                    className="justify-start text-xs h-auto py-2 px-3 whitespace-normal text-left"
                   >
                     Безпека при епілепсії
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => applyProfile("vision")}
-                    className="justify-start text-xs h-auto py-2 px-3"
+                    className="justify-start text-xs h-auto py-2 px-3 whitespace-normal text-left"
                   >
                     Слабкий зір
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => applyProfile("dyslexia")}
-                    className="justify-start text-xs h-auto py-2 px-3"
+                    className="justify-start text-xs h-auto py-2 px-3 whitespace-normal text-left"
                   >
                     Дислексія
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => applyProfile("cognitive")}
-                    className="justify-start text-xs h-auto py-2 px-3"
+                    className="justify-start text-xs h-auto py-2 px-3 whitespace-normal text-left"
                   >
                     Когнітивні порушення
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => applyProfile("motor")}
-                    className="justify-start text-xs h-auto py-2 px-3"
+                    className="justify-start text-xs h-auto py-2 px-3 whitespace-normal text-left"
                   >
                     Моторні порушення
                   </Button>
@@ -440,7 +440,7 @@ export function AccessibilityPanel() {
 
                   <div className="space-y-2">
                     <Label>Вирівнювання тексту</Label>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                       {["initial", "left", "center", "right"].map((align) => (
                         <Button
                           key={align}
@@ -448,7 +448,7 @@ export function AccessibilityPanel() {
                             settings.textAlign === align ? "default" : "outline"
                           }
                           size="sm"
-                          className="flex-1"
+                          className="w-full whitespace-normal text-xs py-2 px-1 h-auto"
                           onClick={() =>
                             updateSetting("textAlign", align as TextAlign)
                           }
@@ -485,7 +485,7 @@ export function AccessibilityPanel() {
                 <h3 className="font-semibold text-lg flex items-center gap-2">
                   <Eye className="h-5 w-5" /> Кольори та Контраст
                 </h3>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {[
                     { val: "none", label: "Стандартний" },
                     { val: "high", label: "Високий контраст" },
@@ -502,7 +502,7 @@ export function AccessibilityPanel() {
                           ? "default"
                           : "outline"
                       }
-                      className="justify-start text-xs py-2 px-3 h-auto"
+                      className="justify-start text-xs py-2 px-3 h-auto whitespace-normal text-left"
                       onClick={() =>
                         updateSetting("contrastMode", mode.val as ContrastMode)
                       }
@@ -551,7 +551,7 @@ export function AccessibilityPanel() {
 
                   <div className="space-y-2">
                     <Label>Розмір курсора</Label>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       <Button
                         variant={
                           settings.cursorMode === "normal"
@@ -559,6 +559,7 @@ export function AccessibilityPanel() {
                             : "outline"
                         }
                         size="sm"
+                        className="w-full whitespace-normal text-xs py-2 px-3 h-auto"
                         onClick={() => updateSetting("cursorMode", "normal")}
                       >
                         Стандарт
@@ -570,6 +571,7 @@ export function AccessibilityPanel() {
                             : "outline"
                         }
                         size="sm"
+                        className="w-full whitespace-normal text-xs py-2 px-3 h-auto"
                         onClick={() => updateSetting("cursorMode", "big-black")}
                       >
                         Великий чорний
@@ -581,6 +583,7 @@ export function AccessibilityPanel() {
                             : "outline"
                         }
                         size="sm"
+                        className="w-full whitespace-normal text-xs py-2 px-3 h-auto"
                         onClick={() => updateSetting("cursorMode", "big-white")}
                       >
                         Великий білий
@@ -614,10 +617,10 @@ export function AccessibilityPanel() {
             </div>
           </ScrollArea>
 
-          <div className="px-8 py-4 border-t bg-muted/30">
+          <div className="px-4 sm:px-8 py-4 border-t bg-muted/30">
             <Button
               variant="destructive"
-              className="w-full"
+              className="w-full whitespace-normal h-auto py-2.5 px-4"
               onClick={resetSettings}
             >
               Скинути налаштування
