@@ -248,6 +248,15 @@ export function AccessibilityPanel() {
 
   return (
     <>
+      <button
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="fixed bottom-6 right-6 z-[9999] flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-md hover:shadow-lg border border-border/50 transition-all duration-300 hover:scale-105 hover:bg-primary/95 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 active:scale-95 cursor-pointer"
+        aria-label="Відкрити панель доступності"
+        title="Панель доступності (Alt+A)"
+      >
+        <Accessibility className="h-6 w-6" />
+      </button>
+
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent
           className="sm:max-w-lg h-[85vh] sm:h-[80vh] flex flex-col p-0 gap-0 overflow-hidden"
